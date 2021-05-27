@@ -1,0 +1,721 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="fact" href="apidoc/modules.html" />
+
+    <meta name="generator" content="sphinx-3.5.4, furo 2021.04.11.beta34"/>
+        <title>Home - fact documentation</title>
+      <link rel="stylesheet" href="_static/styles/furo.css?digest=59ab60ac09ea94ccfe6deddff6d715cce948a6fc">
+    <link rel="stylesheet" href="_static/pygments.css">
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css">
+    
+
+
+<style>
+  :root {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+
+  /* For allowing end-user-specific overrides */
+  .override-light {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  .override-dark {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+</style><link rel="stylesheet" href="_static/styles/furo-extensions.css?digest=d391b54134226e4196576da3bdb6dddb7e05ba2b"></head>
+  <body dir="">
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke-width="1.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z"/>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      class="feather feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="#"><div class="brand">fact  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="#">
+  
+  
+  <span class="sidebar-brand-text">fact  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="apidoc/modules.html">fact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/fact.html">fact package</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+        </label>
+        <div class="section" id="fact-documentation">
+<h1><code class="docutils literal notranslate"><span class="pre">fact</span></code> Documentation<a class="headerlink" href="#fact-documentation" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="python-blueprint">
+<h1>python-blueprint<a class="headerlink" href="#python-blueprint" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://github.com/johnthagen/python-blueprint/actions"><img alt="https://github.com/johnthagen/python-blueprint/workflows/python/badge.svg" src="https://github.com/johnthagen/python-blueprint/workflows/python/badge.svg"/></a>
+<a class="reference external image-reference" href="https://black.readthedocs.io/en/stable/"><img alt="https://img.shields.io/badge/code%20style-black-000000.svg" src="https://img.shields.io/badge/code%20style-black-000000.svg"/></a>
+<a class="reference external image-reference" href="https://timothycrosley.github.io/isort/"><img alt="https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&amp;labelColor=ef8336" src="https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&amp;labelColor=ef8336"/></a>
+<p>Example Python project that demonstrates how to create a tested Python package using the latest
+Python testing and linting tooling. The project contains a <code class="docutils literal notranslate"><span class="pre">fact</span></code> package that provides a
+simple implementation of the <a class="reference external" href="https://en.wikipedia.org/wiki/Factorial">factorial algorithm</a>
+(<code class="docutils literal notranslate"><span class="pre">fact.lib</span></code>) and a command line interface (<code class="docutils literal notranslate"><span class="pre">fact.cli</span></code>).</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>Python 3.6+.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Because <a class="reference external" href="https://pythonclock.org/">Python 2.7 supports ended January 1, 2020</a>, new projects
+should consider supporting Python 3 only, which is simpler than trying to support both.
+As a result, support for Python 2.7 in this example project has been dropped.</p>
+</div>
+</div>
+<div class="section" id="windows-support">
+<h2>Windows Support<a class="headerlink" href="#windows-support" title="Permalink to this headline">¶</a></h2>
+<p>Summary: On Windows, use <code class="docutils literal notranslate"><span class="pre">py</span></code> instead of <code class="docutils literal notranslate"><span class="pre">python3</span></code> for many of the examples in this
+documentation.</p>
+<p>This package fully supports Windows, along with Linux and macOS, but Python is typically
+<a class="reference external" href="https://docs.python.org/3/using/windows.html">installed differently on Windows</a>.
+Windows users typically access Python through the
+<a class="reference external" href="https://www.python.org/dev/peps/pep-0397/">py</a> launcher rather than a <code class="docutils literal notranslate"><span class="pre">python3</span></code>
+link in their <code class="docutils literal notranslate"><span class="pre">PATH</span></code>. Within a virtual environment, all platforms operate the same and use a
+<code class="docutils literal notranslate"><span class="pre">python</span></code> link to access the Python version used in that virtual environment.</p>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Dependencies are defined in:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">requirements.in</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dev-requirements.in</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dev-requirements.txt</span></code></p></li>
+</ul>
+<div class="section" id="virtual-environments">
+<h3>Virtual Environments<a class="headerlink" href="#virtual-environments" title="Permalink to this headline">¶</a></h3>
+<p>It is best practice during development to create an isolated
+<a class="reference external" href="https://docs.python.org/3/library/venv.html">Python virtual environment</a> using the
+<code class="docutils literal notranslate"><span class="pre">venv</span></code> standard library module. This will keep dependant Python packages from interfering
+with other Python projects on your system.</p>
+<p>On *Nix:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># On Python 3.9+, add --upgrade-deps</span>
+$ python3 -m venv venv
+$ <span class="nb">source</span> venv/bin/activate
+</pre></div>
+</div>
+<p>On Windows <code class="docutils literal notranslate"><span class="pre">cmd</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; py -m venv venv
+&gt; venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate.bat
+</pre></div>
+</div>
+<p>Once activated, it is good practice to update core packaging tools (<code class="docutils literal notranslate"><span class="pre">pip</span></code>, <code class="docutils literal notranslate"><span class="pre">setuptools</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">wheel</span></code>) to the latest versions.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span> $ python -m pip install --upgrade pip setuptools wheel
+</pre></div>
+</div>
+</div>
+<div class="section" id="applications-only-locking-dependencies">
+<h3>(Applications Only) Locking Dependencies<a class="headerlink" href="#applications-only-locking-dependencies" title="Permalink to this headline">¶</a></h3>
+<p>This project uses <a class="reference external" href="https://github.com/jazzband/pip-tools">pip-tools</a> to lock project
+dependencies and create reproducible virtual environments.</p>
+<p><strong>Note:</strong> <em>Library</em> projects should not lock their <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>. Since <code class="docutils literal notranslate"><span class="pre">python-blueprint</span></code>
+also has a CLI application, this end-user application example is used to demonstrate how to
+lock application dependencies.</p>
+<p>To update dependencies:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span> $ python -m pip install pip-tools
+<span class="o">(</span>venv<span class="o">)</span> $ python -m piptools compile --upgrade requirements.in
+<span class="o">(</span>venv<span class="o">)</span> $ python -m piptools compile --upgrade dev-requirements.in
+</pre></div>
+</div>
+<p>After upgrading dependencies, run the unit tests as described in the <a class="reference internal" href="#unit-testing">Unit Testing</a> section
+to ensure that none of the updated packages caused incompatibilities in the current project.</p>
+</div>
+<div class="section" id="syncing-virtual-environments">
+<h3>Syncing Virtual Environments<a class="headerlink" href="#syncing-virtual-environments" title="Permalink to this headline">¶</a></h3>
+<p>To cleanly install your dependencies into your virtual environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span> $ python -m piptools sync requirements.txt dev-requirements.txt
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="packaging">
+<h2>Packaging<a class="headerlink" href="#packaging" title="Permalink to this headline">¶</a></h2>
+<p>This project is designed as a Python package, meaning that it can be bundled up and redistributed
+as a single compressed file.</p>
+<p>Packaging is configured by:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MANIFEST.in</span></code></p></li>
+</ul>
+<p>To package the project as both a
+<a class="reference external" href="https://docs.python.org/3/distutils/sourcedist.html">source distribution</a> and a
+<a class="reference external" href="https://wheel.readthedocs.io/en/stable/">wheel</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span> $ python setup.py sdist bdist_wheel
+</pre></div>
+</div>
+<p>This will generate <code class="docutils literal notranslate"><span class="pre">dist/fact-1.0.0.tar.gz</span></code> and <code class="docutils literal notranslate"><span class="pre">dist/fact-1.0.0-py3-none-any.whl</span></code>.</p>
+<p>Read more about the <a class="reference external" href="https://pythonwheels.com/">advantages of wheels</a> to understand why
+generating wheel distributions are important.</p>
+<div class="section" id="upload-distributions-to-pypi">
+<h3>Upload Distributions to PyPI<a class="headerlink" href="#upload-distributions-to-pypi" title="Permalink to this headline">¶</a></h3>
+<p>Source and wheel redistributable packages can be
+<a class="reference external" href="https://packaging.python.org/tutorials/packaging-projects/">uploaded to PyPI</a> or installed
+directly from the filesystem using <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<p>To upload to PyPI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span> $ python -m pip install twine
+<span class="o">(</span>venv<span class="o">)</span> $ twine upload dist/*
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Automated testing is performed using <a class="reference external" href="https://tox.readthedocs.io/en/latest/index.html">tox</a>.
+tox will automatically create virtual environments based on <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> for unit testing,
+PEP8 style guide checking, and documentation generation.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run all environments.</span>
+<span class="c1">#   To only run a single environment, specify it like: -e lint</span>
+<span class="c1"># Note: tox is installed into the virtual environment automatically by ``piptools sync``</span>
+<span class="c1"># command above.</span>
+<span class="o">(</span>venv<span class="o">)</span> $ tox
+</pre></div>
+</div>
+<div class="section" id="unit-testing">
+<h3>Unit Testing<a class="headerlink" href="#unit-testing" title="Permalink to this headline">¶</a></h3>
+<p>Unit testing is performed with <a class="reference external" href="https://pytest.org/">pytest</a>. pytest has become the defacto
+Python unit testing framework. Some key advantages over the built in
+<a class="reference external" href="https://docs.python.org/3/library/unittest.html">unittest</a> module are:</p>
+<ol class="arabic simple">
+<li><p>Significantly less boilerplate needed for tests.</p></li>
+<li><p>PEP8 compliant names (e.g. <code class="docutils literal notranslate"><span class="pre">pytest.raises()</span></code> instead of <code class="docutils literal notranslate"><span class="pre">self.assertRaises()</span></code>).</p></li>
+<li><p>Vibrant ecosystem of plugins.</p></li>
+</ol>
+<p>pytest will automatically discover and run tests by recursively searching for folders and <code class="docutils literal notranslate"><span class="pre">.py</span></code>
+files prefixed with <code class="docutils literal notranslate"><span class="pre">test</span></code> for any functions prefixed by <code class="docutils literal notranslate"><span class="pre">test</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder is created as a Python package (i.e. there is an <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file
+within it) because this helps <code class="docutils literal notranslate"><span class="pre">pytest</span></code> uniquely namespace the test files. Without this,
+two test files cannot be named the same, even if they are in different sub-directories.</p>
+<p>Code coverage is provided by the <a class="reference external" href="https://pytest-cov.readthedocs.io/en/latest/">pytest-cov</a>
+plugin.</p>
+<p>When running a unit test tox environment (e.g. <code class="docutils literal notranslate"><span class="pre">tox</span> <span class="pre">-e</span> <span class="pre">py37</span></code>), an HTML report is
+generated in the <code class="docutils literal notranslate"><span class="pre">htmlcov</span></code> folder showing each source file and which lines were executed during
+unit testing. Open <code class="docutils literal notranslate"><span class="pre">htmlcov/index.html</span></code> in a web browser to view the report. Code coverage
+reports help identify areas of the project that are currently not tested.</p>
+<p>Code coverage is configured in <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>.</p>
+<p>To pass arguments to <code class="docutils literal notranslate"><span class="pre">pytest</span></code> through <code class="docutils literal notranslate"><span class="pre">tox</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span> $ tox -e py37 -- -k invalid_factorial
+</pre></div>
+</div>
+</div>
+<div class="section" id="code-style-checking">
+<h3>Code Style Checking<a class="headerlink" href="#code-style-checking" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a> is the universally accepted style
+guide for Python code. PEP8 code compliance is verified using <a class="reference external" href="http://flake8.pycqa.org/">flake8</a>.
+flake8 is configured in the <code class="docutils literal notranslate"><span class="pre">[flake8]</span></code> section of <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code>. Extra flake8 plugins
+are also included:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pep8-naming</span></code>: Ensure functions, classes, and variables are named with correct casing.</p></li>
+</ul>
+</div>
+<div class="section" id="automated-code-formatting">
+<h3>Automated Code Formatting<a class="headerlink" href="#automated-code-formatting" title="Permalink to this headline">¶</a></h3>
+<p>Code is automatically formatted using <a class="reference external" href="https://github.com/psf/black">black</a>. Imports are
+automatically sorted and grouped using <a class="reference external" href="https://github.com/PyCQA/isort/">isort</a>.</p>
+<p>These tools are configured by:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code></p></li>
+</ul>
+<p>To automatically format code, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span> $ tox -e fmt
+</pre></div>
+</div>
+<p>To verify code has been formatted, such as in a CI job:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span> $ tox -e fmt-check
+</pre></div>
+</div>
+</div>
+<div class="section" id="generated-documentation">
+<h3>Generated Documentation<a class="headerlink" href="#generated-documentation" title="Permalink to this headline">¶</a></h3>
+<p>Documentation that includes the <code class="docutils literal notranslate"><span class="pre">README.rst</span></code> and the Python project modules is automatically
+generated using a <a class="reference external" href="http://sphinx-doc.org/">Sphinx</a> tox environment. Sphinx is a documentation
+generation tool that is the defacto tool for Python documentation. Sphinx uses the
+<a class="reference external" href="https://www.sphinx-doc.org/en/latest/usage/restructuredtext/basics.html">RST</a> markup language.</p>
+<p>This project uses the
+<a class="reference external" href="http://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html">napoleon</a> plugin for
+Sphinx, which renders Google-style docstrings. Google-style docstrings provide a good mix
+of easy-to-read docstrings in code as well as nicely-rendered output.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">"""Computes the factorial through a recursive algorithm.</span>
+
+<span class="sd">Args:</span>
+<span class="sd">    n: A positive input value.</span>
+
+<span class="sd">Raises:</span>
+<span class="sd">    InvalidFactorialError: If n is less than 0.</span>
+
+<span class="sd">Returns:</span>
+<span class="sd">    Computed factorial.</span>
+<span class="sd">"""</span>
+</pre></div>
+</div>
+<p>The Sphinx project is configured in <code class="docutils literal notranslate"><span class="pre">docs/conf.py</span></code>.</p>
+<p>This project uses the <a class="reference external" href="https://pradyunsg.me/furo/">furo</a> Sphinx theme for its elegant, simple
+to use, dark theme.</p>
+<p>Build the docs using the <code class="docutils literal notranslate"><span class="pre">docs</span></code> tox environment (e.g. <code class="docutils literal notranslate"><span class="pre">tox</span></code> or <code class="docutils literal notranslate"><span class="pre">tox</span> <span class="pre">-e</span> <span class="pre">docs</span></code>). Once built,
+open <code class="docutils literal notranslate"><span class="pre">docs/_build/index.html</span></code> in a web browser.</p>
+<div class="section" id="generate-a-new-sphinx-project">
+<h4>Generate a New Sphinx Project<a class="headerlink" href="#generate-a-new-sphinx-project" title="Permalink to this headline">¶</a></h4>
+<p>To generate the Sphinx project shown in this project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: Sphinx is installed into the virtual environment automatically by ``piptools sync``</span>
+<span class="c1"># command above.</span>
+<span class="o">(</span>venv<span class="o">)</span> $ mkdir docs
+<span class="o">(</span>venv<span class="o">)</span> $ <span class="nb">cd</span> docs
+<span class="o">(</span>venv<span class="o">)</span> $ sphinx-quickstart --no-makefile --no-batchfile --extensions sphinx.ext.napoleon
+<span class="c1"># When prompted, select all defaults.</span>
+</pre></div>
+</div>
+<p>Modify <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> appropriately:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add the project's Python package to the path so that autodoc can find it.</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">'../src'</span><span class="p">))</span>
+
+<span class="o">...</span>
+
+<span class="n">html_theme_options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Override the default alabaster line wrap, which wraps tightly at 940px.</span>
+    <span class="s1">'page_width'</span><span class="p">:</span> <span class="s1">'auto'</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Modify <code class="docutils literal notranslate"><span class="pre">index.rst</span></code> appropriately:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">..</span> <span class="n">include</span><span class="p">::</span> <span class="o">../</span><span class="n">README</span><span class="o">.</span><span class="n">rst</span>
+
+<span class="n">apidoc</span><span class="o">/</span><span class="n">modules</span><span class="o">.</span><span class="n">rst</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="continuous-integration">
+<h3>Continuous Integration<a class="headerlink" href="#continuous-integration" title="Permalink to this headline">¶</a></h3>
+<p>Continuous integration is provided by <a class="reference external" href="https://github.com/features/actions">GitHub Actions</a>.
+This runs all tests and lints for every commit and pull request to the repository.</p>
+<p>GitHub Actions is configured in <code class="docutils literal notranslate"><span class="pre">.github/workflows/python.yml</span></code> and <code class="docutils literal notranslate"><span class="pre">tox.ini</span></code> using the
+<a class="reference external" href="https://github.com/ymyzk/tox-gh-actions">tox-gh-actions plugin</a>.</p>
+</div>
+</div>
+<div class="section" id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Permalink to this headline">¶</a></h2>
+<p>Traditionally, Python projects place the source for their packages in the root of the project
+structure, like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fact
+├── fact
+│   ├── __init__.py
+│   ├── cli.py
+│   └── lib.py
+├── tests
+│   ├── __init__.py
+│   └── test_fact.py
+├── tox.ini
+└── setup.py
+</pre></div>
+</div>
+<p>However, this structure is <a class="reference external" href="https://docs.pytest.org/en/latest/goodpractices.html#tests-outside-application-code">known</a> to have bad
+interactions with <code class="docutils literal notranslate"><span class="pre">pytest</span></code> and <code class="docutils literal notranslate"><span class="pre">tox</span></code>, two standard tools maintaining Python projects. The
+fundamental issue is that tox creates an isolated virtual environment for testing. By installing
+the distribution into the virtual environment, <code class="docutils literal notranslate"><span class="pre">tox</span></code> ensures that the tests pass even after the
+distribution has been packaged and installed, thereby catching any errors in packaging and
+installation scripts, which are common. Having the Python packages in the project root subverts
+this isolation for two reasons:</p>
+<ol class="arabic simple">
+<li><p>Calling <code class="docutils literal notranslate"><span class="pre">python</span></code> in the project root (for example, <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span> <span class="pre">tests/</span></code>) <a class="reference external" href="https://docs.pytest.org/en/latest/pythonpath.html#invoking-pytest-versus-python-m-pytest">causes Python
+to add the current working directory</a>
+(the project root) to <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>, which Python uses to find modules. Because the source
+package <code class="docutils literal notranslate"><span class="pre">fact</span></code> is in the project root, it shadows the <code class="docutils literal notranslate"><span class="pre">fact</span></code> package installed in the tox
+environment.</p></li>
+<li><p>Calling <code class="docutils literal notranslate"><span class="pre">pytest</span></code> directly anywhere that it can find the tests will also add the project root
+to <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> if the <code class="docutils literal notranslate"><span class="pre">tests</span></code> folder is a a Python package (that is, it contains a
+<code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file). <a class="reference external" href="https://docs.pytest.org/en/latest/goodpractices.html#conventions-for-python-test-discovery">pytest adds all folders containing packages</a>
+to <code class="docutils literal notranslate"><span class="pre">sys.path</span></code> because it imports the tests like regular Python modules.</p></li>
+</ol>
+<p>In order to properly test the project, the source packages must not be on the Python path. To
+prevent this, there are three possible solutions:</p>
+<ol class="arabic simple">
+<li><p>Remove the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file from <code class="docutils literal notranslate"><span class="pre">tests</span></code> and run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> directly as a tox command.</p></li>
+<li><p>Remove the <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> file from tests and change the working directory of
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code> to <code class="docutils literal notranslate"><span class="pre">tests</span></code>.</p></li>
+<li><p>Move the source packages to a dedicated <code class="docutils literal notranslate"><span class="pre">src</span></code> folder.</p></li>
+</ol>
+<p>The dedicated <code class="docutils literal notranslate"><span class="pre">src</span></code> directory is the <a class="reference external" href="https://docs.pytest.org/en/latest/pythonpath.html#test-modules-conftest-py-files-inside-packages">recommended solution</a>
+by <code class="docutils literal notranslate"><span class="pre">pytest</span></code> when using tox and the solution this blueprint promotes because it is the least
+brittle even though it deviates from the traditional Python project structure. It results is a
+directory structure like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fact
+├── src
+│   └── fact
+│       ├── __init__.py
+│       ├── cli.py
+│       └── lib.py
+├── tests
+│   ├── __init__.py
+│   └── test_fact.py
+├── tox.ini
+└── setup.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="type-hinting">
+<h2>Type Hinting<a class="headerlink" href="#type-hinting" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://docs.python.org/3/library/typing.html">Type hinting</a> allows developers to include
+optional static typing information to Python source code. This allows static analyzers such
+as <a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>, <a class="reference external" href="http://mypy-lang.org/">mypy</a>, or
+<a class="reference external" href="https://github.com/google/pytype">pytype</a> to check that functions are used with the correct
+types before runtime.</p>
+<p>For
+<a class="reference external" href="https://www.jetbrains.com/help/pycharm/type-hinting-in-product.html">PyCharm in particular</a>,
+the IDE is able to provide much richer auto-completion, refactoring, and type checking while
+the user types, resulting in increased productivity and correctness.</p>
+<p>This project uses the type hinting syntax introduced in Python 3:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</pre></div>
+</div>
+<p>Type checking is performed by mypy via <code class="docutils literal notranslate"><span class="pre">tox</span> <span class="pre">-e</span> <span class="pre">type-check</span></code>. mypy is configured in <code class="docutils literal notranslate"><span class="pre">setup.cfg</span></code>.</p>
+<p>See also <a class="reference external" href="https://github.com/typeddjango/awesome-python-typing">awesome-python-typing</a>.</p>
+<div class="section" id="distributing-type-hints">
+<h3>Distributing Type Hints<a class="headerlink" href="#distributing-type-hints" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://www.python.org/dev/peps/pep-0561/">PEP 561</a> defines how a Python package should
+communicate the presence of inline type hints to static type checkers.
+<a class="reference external" href="https://mypy.readthedocs.io/en/stable/installed_packages.html">mypy’s documentation</a> provides
+further examples on how to do this as well.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mypy</span></code> looks for the existence of a file named <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> in the root of the installed
+package to indicate that inline type hints should be checked.</p>
+</div>
+</div>
+<div class="section" id="licensing">
+<h2>Licensing<a class="headerlink" href="#licensing" title="Permalink to this headline">¶</a></h2>
+<p>Licensing for the project is defined in:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LICENSE.txt</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">setup.py</span></code></p></li>
+</ul>
+<p>This project uses a common permissive license, the MIT license.</p>
+<p>You may also want to list the licenses of all of the packages that your Python project depends on.
+To automatically list the licenses for all dependencies in <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> (and their
+transitive dependencies) using
+<a class="reference external" href="https://github.com/raimon49/pip-licenses">pip-licenses</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>venv<span class="o">)</span> $ tox -e licenses
+...
+ Name        Version  License
+ colorama    <span class="m">0</span>.4.3    BSD License
+ exitstatus  <span class="m">1</span>.3.0    MIT License
+</pre></div>
+</div>
+</div>
+<div class="section" id="docker">
+<h2>Docker<a class="headerlink" href="#docker" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://www.docker.com/">Docker</a> is a tool that allows for software to be packaged into
+isolated containers. It is not necessary to use Docker in a Python project, but for the purposes
+of presenting best practice examples, a Docker configuration is provided in this project. The
+Docker configuration in this repository is optimized for small size and increased security,
+rather than simplicity.</p>
+<p>Docker is configured in:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.dockerignore</span></code></p></li>
+</ul>
+<p>To build the Docker image:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ docker build --tag fact .
+</pre></div>
+</div>
+<p>To run the image in a container:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example calculating the factorial of 5.</span>
+$ docker run --rm --interactive --tty fact <span class="m">5</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="pycharm-configuration">
+<h2>PyCharm Configuration<a class="headerlink" href="#pycharm-configuration" title="Permalink to this headline">¶</a></h2>
+<p>To configure PyCharm 2018.3 and newer to align to the code style used in this project:</p>
+<ul>
+<li><p>Settings | Search “Hard wrap at”</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Editor | Code Style | General | Hard wrap at: 99</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Settings | Search “Optimize Imports”</p>
+<blockquote>
+<div><ul>
+<li><p>Editor | Code Style | Python | Imports</p>
+<blockquote>
+<div><ul>
+<li><p>☑ Sort import statements</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>☑ Sort imported names in “from” imports</p></li>
+<li><p>☐ Sort plain and “from” imports separately within a group</p></li>
+<li><p>☐ Sort case-insensitively</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Structure of “from” imports</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>◎ Leave as is</p></li>
+<li><p>◉ Join imports with the same source</p></li>
+<li><p>◎ Always split imports</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Settings | Search “Docstrings”</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Tools | Python Integrated Tools | Docstrings | Docstring Format: Google</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Settings | Search “Force parentheses”</p>
+<blockquote>
+<div><ul>
+<li><p>Editor | Code Style | Python | Wrapping and Braces | “From” Import Statements</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>☑ Force parentheses if multiline</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="section" id="integrate-code-formatters">
+<h3>Integrate Code Formatters<a class="headerlink" href="#integrate-code-formatters" title="Permalink to this headline">¶</a></h3>
+<p>To integrate automatic code formatters into PyCharm, reference the following instructions:</p>
+<ul>
+<li><p><a class="reference external" href="https://black.readthedocs.io/en/stable/editor_integration.html#pycharm-intellij-idea">black integration</a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The File Watchers method (step 3) is recommended. This will run <code class="docutils literal notranslate"><span class="pre">black</span></code> on every save.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><a class="reference external" href="https://github.com/timothycrosley/isort/wiki/isort-Plugins">isort integration</a></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The File Watchers method (option 1) is recommended. This will run <code class="docutils literal notranslate"><span class="pre">isort</span></code> on every save.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>These tools work best if you properly mark directories as excluded from the project that should
+be, such as <code class="docutils literal notranslate"><span class="pre">.tox</span></code>. See
+<a class="reference external" href="https://www.jetbrains.com/help/pycharm/project-tool-window.html#content_pane_context_menu">https://www.jetbrains.com/help/pycharm/project-tool-window.html#content_pane_context_menu</a>
+on how to Right Click | Mark Directory as | Excluded.</p>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="apidoc/modules.html">fact</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apidoc/fact.html">fact package</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</div>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="apidoc/modules.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">fact</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/index.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">fact</span></code> Documentation</a></li>
+<li><a class="reference internal" href="#python-blueprint">python-blueprint</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a></li>
+<li><a class="reference internal" href="#windows-support">Windows Support</a></li>
+<li><a class="reference internal" href="#dependencies">Dependencies</a><ul>
+<li><a class="reference internal" href="#virtual-environments">Virtual Environments</a></li>
+<li><a class="reference internal" href="#applications-only-locking-dependencies">(Applications Only) Locking Dependencies</a></li>
+<li><a class="reference internal" href="#syncing-virtual-environments">Syncing Virtual Environments</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#packaging">Packaging</a><ul>
+<li><a class="reference internal" href="#upload-distributions-to-pypi">Upload Distributions to PyPI</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#testing">Testing</a><ul>
+<li><a class="reference internal" href="#unit-testing">Unit Testing</a></li>
+<li><a class="reference internal" href="#code-style-checking">Code Style Checking</a></li>
+<li><a class="reference internal" href="#automated-code-formatting">Automated Code Formatting</a></li>
+<li><a class="reference internal" href="#generated-documentation">Generated Documentation</a><ul>
+<li><a class="reference internal" href="#generate-a-new-sphinx-project">Generate a New Sphinx Project</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#continuous-integration">Continuous Integration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li><a class="reference internal" href="#type-hinting">Type Hinting</a><ul>
+<li><a class="reference internal" href="#distributing-type-hints">Distributing Type Hints</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#licensing">Licensing</a></li>
+<li><a class="reference internal" href="#docker">Docker</a></li>
+<li><a class="reference internal" href="#pycharm-configuration">PyCharm Configuration</a><ul>
+<li><a class="reference internal" href="#integrate-code-formatters">Integrate Code Formatters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </main>
+</div>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/main.js?digest=e931d09b2a40c1bb82b542effe772014573baf67"></script></body>
+</html>
