@@ -42,7 +42,7 @@ RUN pip install --upgrade pip wheel && \
 
 # Copy in source files.
 COPY LICENSE.txt MANIFEST.in pyproject.toml README.rst requirements.txt setup.py ./
-COPY src src
+COPY sourcecode src
 
 # Install console script.
 RUN pip install .
