@@ -27,14 +27,6 @@ class Piece():
 
     def to_unicode(self) -> str:
         white_switcher: dict[PieceType, str] = {
-            PieceType.KING: '\u2654',
-            PieceType.QUEEN: '\u2655',
-            PieceType.ROOK: '\u2656',
-            PieceType.BISHOP: '\u2657',
-            PieceType.KNIGHT: '\u2658',
-            PieceType.PAWN: '\u2659'
-        }
-        black_switcher: dict[PieceType, str] = {
             PieceType.KING: '\u265A',
             PieceType.QUEEN: '\u265B',
             PieceType.ROOK: '\u265C',
@@ -42,12 +34,19 @@ class Piece():
             PieceType.KNIGHT: '\u265E',
             PieceType.PAWN: '\u265F'
         }
+        black_switcher: dict[PieceType, str] = {
+            PieceType.KING: '\u2654',
+            PieceType.QUEEN: '\u2655',
+            PieceType.ROOK: '\u2656',
+            PieceType.BISHOP: '\u2657',
+            PieceType.KNIGHT: '\u2658',
+            PieceType.PAWN: '\u2659'
+        }
 
         switcher: dict[Color, dict[PieceType, str]] = {
             Color.BLACK: black_switcher,
             Color.WHITE: white_switcher
         }
-
         return switcher.get(self.color).get(self.kind)
 
 
