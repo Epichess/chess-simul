@@ -51,16 +51,16 @@ class Piece():
 
 
 str_to_piece: dict[str, Piece] = {
-    'K': Piece(PieceType.KING, Color.BLACK),
-    'Q': Piece(PieceType.QUEEN, Color.BLACK),
-    'R': Piece(PieceType.ROOK, Color.BLACK),
-    'B': Piece(PieceType.BISHOP, Color.BLACK),
-    'N': Piece(PieceType.KNIGHT, Color.BLACK),
-    'P': Piece(PieceType.PAWN, Color.BLACK),
-    'k': Piece(PieceType.KING, Color.WHITE),
-    'q': Piece(PieceType.QUEEN, Color.WHITE),
-    'r': Piece(PieceType.ROOK, Color.WHITE),
-    'b': Piece(PieceType.BISHOP, Color.WHITE),
-    'n': Piece(PieceType.KNIGHT, Color.WHITE),
-    'p': Piece(PieceType.PAWN, Color.WHITE)
+    'k': Piece(PieceType.KING, Color.BLACK),
+    'q': Piece(PieceType.QUEEN, Color.BLACK),
+    'r': Piece(PieceType.ROOK, Color.BLACK),
+    'b': Piece(PieceType.BISHOP, Color.BLACK),
+    'n': Piece(PieceType.KNIGHT, Color.BLACK),
+    'p': Piece(PieceType.PAWN, Color.BLACK),
+    'K': Piece(PieceType.KING, Color.WHITE),
+    'Q': Piece(PieceType.QUEEN, Color.WHITE),
+    'R': Piece(PieceType.ROOK, Color.WHITE),
+    'B': Piece(PieceType.BISHOP, Color.WHITE),
+    'N': Piece(PieceType.KNIGHT, Color.WHITE),
+    'P': Piece(PieceType.PAWN, Color.WHITE)
 }
