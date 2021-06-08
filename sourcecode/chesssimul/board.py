@@ -1,8 +1,8 @@
 from square import Square
 from piece import *
 
-LineToIndex = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-ColumnToIndex = ['8', '7', '6', '5', '4', '3', '2', '1']
+IndexToLine = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+IndexToColumn = ['8', '7', '6', '5', '4', '3', '2', '1']
 
 Columns: dict[str, int] = {
     'a': 0,
@@ -139,8 +139,8 @@ class Board:
 
         if self.en_passant_target_square is not None:
             enpassant = self.en_passant_target_square
-            chessline = LineToIndex[enpassant[0]]
-            chesscolumn = ColumnToIndex[enpassant[1]]
+            chessline = IndexToLine[enpassant[0]]
+            chesscolumn = IndexToColumn[enpassant[1]]
             enpassant_target = ' ' + chessline + chesscolumn + ' '
             board_fen += enpassant_target
         else:
