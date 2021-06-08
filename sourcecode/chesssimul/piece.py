@@ -49,18 +49,42 @@ class Piece():
         }
         return switcher.get(self.color).get(self.kind)
 
+    def piece_to_str(self) -> str:
+        white_piece: dict[PieceType, str] = {
+            PieceType.KING: 'K',
+            PieceType.QUEEN: 'Q',
+            PieceType.ROOK: 'R',
+            PieceType.BISHOP: 'B',
+            PieceType.KNIGHT: 'N',
+            PieceType.PAWN: 'P',
+        }
+        black_piece: dict[PieceType, str] = {
+            PieceType.KING: 'k',
+            PieceType.QUEEN: 'q',
+            PieceType.ROOK: 'r',
+            PieceType.BISHOP: 'b',
+            PieceType.KNIGHT: 'n',
+            PieceType.PAWN: 'p',
+        }
+
+        piece: dict[Color, dict[PieceType, str]] = {
+            Color.BLACK: black_piece,
+            Color.WHITE: white_piece
+        }
+        return piece.get(self.color).get(self.kind)
 
 str_to_piece: dict[str, Piece] = {
-    'K': Piece(PieceType.KING, Color.BLACK),
-    'Q': Piece(PieceType.QUEEN, Color.BLACK),
-    'R': Piece(PieceType.ROOK, Color.BLACK),
-    'B': Piece(PieceType.BISHOP, Color.BLACK),
-    'N': Piece(PieceType.KNIGHT, Color.BLACK),
-    'P': Piece(PieceType.PAWN, Color.BLACK),
-    'k': Piece(PieceType.KING, Color.WHITE),
-    'q': Piece(PieceType.QUEEN, Color.WHITE),
-    'r': Piece(PieceType.ROOK, Color.WHITE),
-    'b': Piece(PieceType.BISHOP, Color.WHITE),
-    'n': Piece(PieceType.KNIGHT, Color.WHITE),
-    'p': Piece(PieceType.PAWN, Color.WHITE)
+    'k': Piece(PieceType.KING, Color.BLACK),
+    'q': Piece(PieceType.QUEEN, Color.BLACK),
+    'r': Piece(PieceType.ROOK, Color.BLACK),
+    'b': Piece(PieceType.BISHOP, Color.BLACK),
+    'n': Piece(PieceType.KNIGHT, Color.BLACK),
+    'p': Piece(PieceType.PAWN, Color.BLACK),
+    'K': Piece(PieceType.KING, Color.WHITE),
+    'Q': Piece(PieceType.QUEEN, Color.WHITE),
+    'R': Piece(PieceType.ROOK, Color.WHITE),
+    'B': Piece(PieceType.BISHOP, Color.WHITE),
+    'N': Piece(PieceType.KNIGHT, Color.WHITE),
+    'P': Piece(PieceType.PAWN, Color.WHITE)
 }
+
