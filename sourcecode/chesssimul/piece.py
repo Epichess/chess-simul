@@ -49,6 +49,29 @@ class Piece():
         }
         return switcher.get(self.color).get(self.kind)
 
+    def piece_to_str(self) -> str:
+        white_piece: dict[PieceType, str] = {
+            PieceType.KING: 'K',
+            PieceType.QUEEN: 'Q',
+            PieceType.ROOK: 'R',
+            PieceType.BISHOP: 'B',
+            PieceType.KNIGHT: 'N',
+            PieceType.PAWN: 'P',
+        }
+        black_piece: dict[PieceType, str] = {
+            PieceType.KING: 'k',
+            PieceType.QUEEN: 'q',
+            PieceType.ROOK: 'r',
+            PieceType.BISHOP: 'b',
+            PieceType.KNIGHT: 'n',
+            PieceType.PAWN: 'p',
+        }
+
+        piece: dict[Color, dict[PieceType, str]] = {
+            Color.BLACK: black_piece,
+            Color.WHITE: white_piece
+        }
+        return piece.get(self.color).get(self.kind)
 
 str_to_piece: dict[str, Piece] = {
     'k': Piece(PieceType.KING, Color.BLACK),
@@ -64,3 +87,4 @@ str_to_piece: dict[str, Piece] = {
     'N': Piece(PieceType.KNIGHT, Color.WHITE),
     'P': Piece(PieceType.PAWN, Color.WHITE)
 }
+
