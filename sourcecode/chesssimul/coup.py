@@ -1,6 +1,10 @@
-class Move:
+from typing import Tuple
 
-    def __init__(self, Piece, start, end):
-        self.Piece = Piece
+
+class Move:
+    start: Tuple[int, int]
+    end: Tuple[int, int]
+
+    def __init__(self, start, end):
         self.start = start
         self.end = end
