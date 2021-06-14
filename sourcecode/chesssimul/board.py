@@ -30,6 +30,7 @@ Lines: dict[str, int] = {
 
 class Board:
     board: list[list[Square]]
+    move_list: list[Move]
     to_move: Color
     can_white_queen_side_castle: bool
     can_white_king_side_castle: bool
@@ -38,6 +39,9 @@ class Board:
     en_passant_target_square: tuple[int, int] or None
     halfmove_clock: int
     fullmove_number: int
+
+    def __init__(self):
+        self.move_list = list()
 
     def getSquare(self, square: str) -> Square:
         square_list = list(square)
@@ -50,9 +54,9 @@ class Board:
         self.board = list()
         self.to_move = Color.WHITE
         self.can_black_king_side_castle = True
-        self.can_black_queen_side_castle = False
+        self.can_black_queen_side_castle = True
         self.can_white_king_side_castle = True
-        self.can_white_queen_side_castle = False
+        self.can_white_queen_side_castle = True
         self.en_passant_target_square = None
         self.halfmove_clock = 0
         self.fullmove_number = 0
@@ -104,8 +108,9 @@ class Board:
         start_square.piece = None
 
     def make_move(self, move: Move) -> bool:
+        self.move_list.append()
 
-        if (move.end[0] in range(0, 8) and move.end[1] in range(0, 8)):
+        if move.end[0] in range(0, 8) and move.end[1] in range(0, 8):
             # postion de la pièce avant son déplacement dans l'échiquier
             start_square: Square = self.board[move.start[0]][move.start[1]]
             # Y a t'il une pièce à déplacer
@@ -114,7 +119,7 @@ class Board:
                 type_piece_start: PieceType = start_square.piece.kind
                 print(type_piece_start)
                 # Si c'est le cavalier
-                if (type_piece_start == PieceType.KNIGHT):
+                if type_piece_start == PieceType.KNIGHT:
                     print("vérification du coup du cavalier")
                     if (self.move_knight(move)):
                         return True
