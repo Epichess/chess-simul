@@ -88,7 +88,7 @@ class Board:
             for col in range(8):
                 square = self.board[line][col]
                 if square.isEmpty():
-                    board_string += '  '
+                    board_string += ' '
                 else:
                     board_string += square.piece.to_unicode()
                 board_string += '|'
@@ -104,8 +104,7 @@ class Board:
         start_square.piece = None
 
     def make_move(self, move: Move) -> bool:
-
-        if (move.end[0] in range(0, 8) and move.end[1] in range(0, 8)):
+        if move.end[0] in range(0, 8) and move.end[1] in range(0, 8):
             # postion de la pièce avant son déplacement dans l'échiquier
             start_square: Square = self.board[move.start[0]][move.start[1]]
             # Y a t'il une pièce à déplacer
@@ -114,17 +113,17 @@ class Board:
                 type_piece_start: PieceType = start_square.piece.kind
                 print(type_piece_start)
                 # Si c'est le cavalier
-                if (type_piece_start == PieceType.KNIGHT):
+                if type_piece_start == PieceType.KNIGHT:
                     print("vérification du coup du cavalier")
-                    if (self.move_knight(move)):
+                    if self.move_knight(move):
                         return True
-                if (type_piece_start == PieceType.BISHOP):
+                if type_piece_start == PieceType.BISHOP:
                     print("vérification du coup du fou")
-                    if (self.move_bishop(move)):
+                    if self.move_bishop(move):
                         return True
-                if (type_piece_start == PieceType.PAWN):
+                if type_piece_start == PieceType.PAWN:
                     print("vérification du coup du pion")
-                    if (self.move_pawn(move)):
+                    if self.move_pawn(move):
                         return True
                 else:
                     return False
@@ -218,7 +217,28 @@ class Board:
     def move_pawn(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
         end_square: Square = self.board[move.end[0]][move.end[1]]
-        if move.end[0] == move.start[0] + 2 or move.end[0] == move.start[0] - 2:
+        #Pawns can only move forward one square at a time
+        if move.end[0] == move.start[0] + 1 and move.end[1] == move.start[1] and end_square.isEmpty:
+            self.board[move.end[0]][move.end[1]].piece = start_square.piece
+            self.board[move.start[0]][move.start[1]].piece = None
+            print("moved pawn one step in front, because there is no piece in front of it.")
+            return True
+        #except for their very first move where they can move forward two squares.
+        elif move.end[0] == move.start[0] + 2 and move.start[0] == 1 and move.end[1] == move.start[1] and end_square.isEmpty:
+            self.board[move.end[0]][move.end[1]].piece = start_square.piece
+            self.board[move.start[0]][move.start[1]].piece = None
+            print("moved pawn two steps in front, because there is no piece in front of it.")
+            return True
+        #Pawns can only capture one square diagonally in front of them
+        elif move.end[0] == move.start[0] + 1 and move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1:
+            if end_square.isEmpty is False and end_square.piece.color != start_square.piece.color:
+                self.board[move.end[0]][move.end[1]].piece = start_square.piece
+                self.board[move.start[0]][move.start[1]].piece = None
+                print("moved pawn one diagonal step in front, because there is a piece from different color to capture.")
+                return True
+            else:
+                print("cannot move pawn here.")
+                return False
 
         return False
 
@@ -277,23 +297,6 @@ class Board:
         return board_fen
 
 
-board: Board = Board()
-board.init_board()
-print(board.to_unicode())
-board.move('e2e4')
 
-# fou
-# move = Move([7,2], [7,1])
 
-# cavalier
-move = Move([7, 6], [5, 6])
 
-print(board.make_move(move))
-
-board.setEnPassantTargetSquare()
-print(board.to_unicode())
-print(board.to_fen())
-print(board.board[0][0].piece.kind)
-print(board.board[0][0].piece.color)
-print(board.board[4][4].piece.kind)
-print(board.board[4][4].piece.color)
