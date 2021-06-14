@@ -218,8 +218,7 @@ class Board:
     def move_pawn(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
         end_square: Square = self.board[move.end[0]][move.end[1]]
-        if move.end[0] == move.start[0] + 2 or move.end[0] == move.start[0] - 2:
-
+        # if move.end[0] == move.start[0] + 2 or move.end[0] == move.start[0] - 2:
         return False
 
     def board_to_fen(self) -> str:
@@ -275,25 +274,3 @@ class Board:
         board_fen += fullmove
 
         return board_fen
-
-
-board: Board = Board()
-board.init_board()
-print(board.to_unicode())
-board.move('e2e4')
-
-# fou
-# move = Move([7,2], [7,1])
-
-# cavalier
-move = Move([7, 6], [5, 6])
-
-print(board.make_move(move))
-
-board.setEnPassantTargetSquare()
-print(board.to_unicode())
-print(board.to_fen())
-print(board.board[0][0].piece.kind)
-print(board.board[0][0].piece.color)
-print(board.board[4][4].piece.kind)
-print(board.board[4][4].piece.color)
