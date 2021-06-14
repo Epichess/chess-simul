@@ -122,6 +122,10 @@ class Board:
                     print("vérification du coup du fou")
                     if (self.move_bishop(move)):
                         return True
+                if (type_piece_start == PieceType.PAWN):
+                    print("vérification du coup du pion")
+                    if (self.move_pawn(move)):
+                        return True
                 else:
                     return False
             else:
@@ -210,6 +214,13 @@ class Board:
                     if (end_square.piece.color != start_square.piece.color):
                         self.board[move.end[0]][move.end[1]] = start_square
         print('end')
+
+    def move_pawn(self, move: Move) -> bool:
+        start_square: Square = self.board[move.start[0]][move.start[1]]
+        end_square: Square = self.board[move.end[0]][move.end[1]]
+        if move.end[0] == move.start[0] + 2 or move.end[0] == move.start[0] - 2:
+
+        return False
 
     def board_to_fen(self) -> str:
         board_fen = ''
