@@ -110,7 +110,7 @@ class Board:
     def make_move(self, move: Move) -> bool:
         self.move_list.append(self)
         
-        if (move.end[0] in range(0, 8) and move.end[1] in range(0, 8)):
+        if (move.end[0] >= 0 and move.end[1] <= 7):
             #postion de la pièce avant son déplacement dans l'échiquier
             start_square: Square = self.board[move.start[0]][move.start[1]]
             #Y a t'il une pièce à déplacer
@@ -159,8 +159,11 @@ class Board:
         print("pièce déplacée")
         return True
 
-    def check_pin(self, move: Move) -> bool:
-        print("test")
+    def check_pin(self) -> bool:
+        for i in range(8):
+            for j in range(8):
+                self.board[i][j]
+
 
     def move_knight(self, move: Move) -> bool:
         #postion de la pièce avant son déplacement dans l'échiquier
@@ -195,71 +198,44 @@ class Board:
         
         ##############################
         #variable test 
-        #self.board[6][1].piece = None
+        self.board[6][1].piece = None
         ##############################
 
-        if (move.end[0] in range(0, 8) and move.end[1] in range(0, 8)):
+        if (move.end[0] >= 0 and move.end[1] <= 7):
 
             iteration_lin: float = abs(move.end[0] - move.start[0])
             iteration_col: float = abs(move.end[1] - move.start[1])
 
+            lin_sign: int = 1
+            col_sign: int = 1
+
             if (iteration_lin == iteration_col):
                 if ((move.end[0] - move.start[0]) < 0 and (move.end[1] - move.start[1]) < 0):
-                    print("- -")
-                    for i in range(iteration_lin):
-                        i = i + 1
-                        # si la case testée n'est pas vide et qu'elle n'est pas l'emplacement finale de la pièce
-                        if not self.board[move.start[0] - i][move.start[1] - i].isEmpty() and self.board[move.start[0] - i][move.start[1] - i] != self.board[move.end[0]][move.end[1]]:
-                            print("Une pièce bloque le passage du fou")
-                            return False
-                        # si elle est vide et l'emplacement finale
-                        elif self.board[move.end[0]][move.end[1]].isEmpty() and self.board[move.start[0] - i][move.start[1] - i] == self.board[move.end[0]][move.end[1]]:
-                            return self.move_piece(move)
-                        # si elle n'est pas vide et que c'est l'emplacement finale
-                        elif not self.board[move.end[0]][move.end[1]].isEmpty() and self.board[move.start[0] - i][move.start[1] - i] == self.board[move.end[0]][move.end[1]]:
-                            return self.take_piece(move)
+                    lin_sign = -1
+                    col_sign = -1
                 elif ((move.end[0] - move.start[0]) < 0 and (move.end[1] - move.start[1]) > 0):
-                    for i in range(iteration_lin):
-                        i = i + 1
-                        # si la case testée n'est pas vide et qu'elle n'est pas l'emplacement finale de la pièce
-                        if not self.board[move.start[0] - i][move.start[1] + i].isEmpty() and self.board[move.start[0] - i][move.start[1] + i] != self.board[move.end[0]][move.end[1]]:
-                            print("Une pièce bloque le passage du fou")
-                            print("- +")
-                            return False
-                        # si elle est vide et l'emplacement finale
-                        elif self.board[move.end[0]][move.end[1]].isEmpty() and self.board[move.start[0] - i][move.start[1] + i] == self.board[move.end[0]][move.end[1]]:
-                            return self.move_piece(move)
-                        # si elle n'est pas vide et que c'est l'emplacement finale
-                        elif not self.board[move.end[0]][move.end[1]].isEmpty() and self.board[move.start[0] - i][move.start[1] + i] == self.board[move.end[0]][move.end[1]]:
-                            return self.take_piece(move)
+                    lin_sign = -1
+                    col_sign = 1
                 elif ((move.end[0] - move.start[0]) > 0 and (move.end[1] - move.start[1]) > 0):
-                    for i in range(iteration_lin):
-                        i = i + 1
-                        # si la case testée n'est pas vide et qu'elle n'est pas l'emplacement finale de la pièce
-                        if not self.board[move.start[0] + i][move.start[1] + i].isEmpty() and self.board[move.start[0] + i][move.start[1] + i] != self.board[move.end[0]][move.end[1]]:
-                            print("Une pièce bloque le passage du fou")
-                            print("+ +")
-                            return False
-                        # si elle est vide et l'emplacement finale
-                        elif self.board[move.end[0]][move.end[1]].isEmpty() and self.board[move.start[0] + i][move.start[1] + i] == self.board[move.end[0]][move.end[1]]:
-                            return self.move_piece(move)
-                        # si elle n'est pas vide et que c'est l'emplacement finale
-                        elif not self.board[move.end[0]][move.end[1]].isEmpty() and self.board[move.start[0] + i][move.start[1] + i] == self.board[move.end[0]][move.end[1]]:
-                            return self.take_piece(move)
+                    lin_sign = 1
+                    col_sign = 1
                 elif ((move.end[0] - move.start[0]) > 0 and (move.end[1] - move.start[1]) < 0):
-                    for i in range(iteration_lin):
-                        i = i + 1
-                        # si la case testée n'est pas vide et qu'elle n'est pas l'emplacement finale de la pièce
-                        if not self.board[move.start[0] + i][move.start[1] - i].isEmpty() and self.board[move.start[0] + i][move.start[1] - i] != self.board[move.end[0]][move.end[1]]:
-                            print("Une pièce bloque le passage du fou")
-                            print("+ -")
-                            return False
-                        # si elle est vide et l'emplacement finale
-                        elif self.board[move.end[0]][move.end[1]].isEmpty() and self.board[move.start[0] + i][move.start[1] - i] == self.board[move.end[0]][move.end[1]]:
-                            return self.move_piece(move)
-                        # si elle n'est pas vide et que c'est l'emplacement finale
-                        elif not self.board[move.end[0]][move.end[1]].isEmpty() and self.board[move.start[0] + i][move.start[1] - i] == self.board[move.end[0]][move.end[1]]:
-                            return self.take_piece(move)
+                    lin_sign = 1
+                    col_sign = -1
+                else:
+                    return False
+
+                for i in range(1, iteration_lin - 1):
+                    # si la case testée n'est pas vide et qu'elle n'est pas l'emplacement finale de la pièce
+                    if not self.board[move.start[0] + lin_sign * i][move.start[1] + col_sign * i].isEmpty():
+                        print("Une pièce bloque le passage du fou")
+                        return False
+                # si elle est vide et l'emplacement finale
+                if self.board[move.end[0]][move.end[1]].isEmpty():
+                    return self.move_piece(move)
+                # si elle n'est pas vide et que c'est l'emplacement finale
+                elif not self.board[move.end[0]][move.end[1]].isEmpty():
+                    return self.take_piece(move)
                 else:
                     return False
             else:
