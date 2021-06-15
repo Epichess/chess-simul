@@ -222,10 +222,8 @@ class Board:
             if self.board[move.end[0]][move.end[1]].isEmpty():
                 return self.move_piece(move)
             # si elle n'est pas vide et que c'est l'emplacement finale
-            elif not self.board[move.end[0]][move.end[1]].isEmpty():
-                return self.take_piece(move)
             else:
-                return False
+                return self.take_piece(move)
         else:
             return False
     
