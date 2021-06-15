@@ -42,7 +42,7 @@ class Board:
 
     def __init__(self):
         self.move_list = list()
-        
+
     def getSquare(self, square: str) -> Square:
         square_list = list(square)
         return self.board[Lines.get(square_list[1])][Columns.get(square_list[0])]
@@ -99,6 +99,9 @@ class Board:
             board_string += '\n'
         return board_string
 
+    def __str__(self):
+        return self.to_unicode()
+
     def move(self, lam: str):
         lamlist = list(lam)
         pawn_passant = ''
@@ -108,37 +111,40 @@ class Board:
         start_square.piece = None
 
     def make_move(self, move: Move) -> bool:
-        self.move_list.append(move)
-        
-        if move.end[0] >= 0 and move.end[0] <= 7 and move.end[1] >= 0 and move.end[1] <= 7:
+        is_move_valid = False
+
+        if 0 <= move.end[0] <= 7 and 0 <= move.end[1] <= 7:
             # postion de la pièce avant son déplacement dans l'échiquier
             start_square: Square = self.board[move.start[0]][move.start[1]]
-            #Y a t'il une pièce à déplacer
+            # Y a t'il une pièce à déplacer
             if not (start_square.isEmpty()):
                 # type de la pièce que nous voulons déplacer
                 type_piece_start: PieceType = start_square.piece.kind
                 print(type_piece_start)
                 # Si c'est le cavalier
-                if (type_piece_start == PieceType.KNIGHT):
+                if type_piece_start == PieceType.KNIGHT:
                     print("vérification du coup du cavalier")
-                    if (self.move_knight(move)):
-                        return True
-                if (type_piece_start == PieceType.BISHOP):
+                    is_move_valid = self.move_knight(move)
+                if type_piece_start == PieceType.BISHOP:
                     print("vérification du coup du fou")
-                    if (self.move_bishop(move)):
-                        return True
-                if (type_piece_start == PieceType.PAWN):
+                    is_move_valid = self.move_bishop(move)
+                if type_piece_start == PieceType.PAWN:
                     print("vérification du coup du pion")
-                    if (self.move_pawn(move)):
-                        return True
-                else:
-                    return False
+                    is_move_valid = self.move_pawn(move)
             else:
                 print("Aucune pièce à déplacer")
-                return False
+                is_move_valid = False
         else:
-            print("déplacement d'un pion en dehors de l'échiquier")
-            return False
+            print("déplacement d'une pièce en dehors de l'échiquier")
+            is_move_valid = False
+
+        if is_move_valid:
+            self.move_list.append(move)
+            if self.to_move == Color.WHITE:
+                self.to_move = Color.BLACK
+            else:
+                self.to_move = Color.WHITE
+        return is_move_valid
 
     def take_piece(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
@@ -167,9 +173,6 @@ class Board:
                         if self.board[i][col]:
                             print("pas fini")
 
-
-
-
     def move_knight(self, move: Move) -> bool:
         # postion de la pièce avant son déplacement dans l'échiquier
         start_square: Square = self.board[move.start[0]][move.start[1]]
@@ -177,10 +180,10 @@ class Board:
         end_square: Square = self.board[move.end[0]][move.end[1]]
         if move.end[0] == move.start[0] + 2 or move.end[0] == move.start[0] - 2:
             if move.end[1] == move.start[1] + 1 or move.end[1] == move.start[1] - 1:
-                #Si vide
-                if end_square.isEmpty:
+                # Si vide
+                if end_square.isEmpty():
                     return self.move_piece(move)
-                elif not end_square.isEmpty:
+                elif not end_square.isEmpty():
                     return self.take_piece(move)
             else:
                 print("Impossible de déplacer le cavalier à cet endroit")
@@ -188,7 +191,7 @@ class Board:
 
         elif move.end[1] == move.start[1] + 2 or move.end[1] == move.start[1] - 2:
             if move.end[0] == move.start[0] + 1 or move.end[0] == move.start[0] - 1:
-                if end_square.isEmpty:
+                if end_square.isEmpty():
                     return self.move_piece(move)
                 else:
                     return self.take_piece(move)
@@ -226,7 +229,7 @@ class Board:
                 return self.take_piece(move)
         else:
             return False
-    
+
     def move_pawn(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
         end_square: Square = self.board[move.end[0]][move.end[1]]
