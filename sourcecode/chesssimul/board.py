@@ -132,7 +132,6 @@ class Board:
             start_square: Square = self.board[move.start[0]][move.start[1]]
             if not (start_square.isEmpty()):
                 type_piece_start: PieceType = start_square.piece.kind
-                print(type_piece_start)
                 if type_piece_start == PieceType.KNIGHT:
                     print("vérification du coup du cavalier")
                     is_move_valid = self.move_knight(move)
@@ -199,7 +198,6 @@ class Board:
                 elif not end_square.isEmpty():
                     return self.take_piece(move)
                 else:
-                    print("got here")
                     return self.move_piece(move)
             else:
                 print("Impossible de déplacer le cavalier à cet endroit")
@@ -220,8 +218,8 @@ class Board:
 
     def move_bishop(self, move: Move) -> bool:
 
-        iteration_lin: float = abs(move.end[0] - move.start[0])
-        iteration_col: float = abs(move.end[1] - move.start[1])
+        iteration_lin: int = abs(move.end[0] - move.start[0])
+        iteration_col: int = abs(move.end[1] - move.start[1])
         lin_sign: int = 1
         col_sign: int = 1
 
@@ -231,7 +229,7 @@ class Board:
             if (move.end[1] - move.start[1]) < 0:
                 col_sign = -1
 
-            for i in range(1, iteration_lin - 1):
+            for i in range(1, iteration_lin):
                 # si la case testée n'est pas vide et qu'elle n'est pas l'emplacement finale de la pièce
                 if not self.board[move.start[0] + lin_sign * i][move.start[1] + col_sign * i].isEmpty():
                     print("Une pièce bloque le passage du fou")
@@ -246,8 +244,8 @@ class Board:
             return False
 
     def move_rook(self, move: Move) -> bool:
-        iteration_lin: float = abs(move.end[0] - move.start[0])
-        iteration_col: float = abs(move.end[1] - move.start[1])
+        iteration_lin: int = abs(move.end[0] - move.start[0])
+        iteration_col: int = abs(move.end[1] - move.start[1])
 
         lin_sign: int = 1
         col_sign: int = 1
@@ -288,7 +286,7 @@ class Board:
         else:
             print("Impossible de déplacer la tour à cet endroit")
             return False
-    
+
     def move_pawn(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
         end_square: Square = self.board[move.end[0]][move.end[1]]
