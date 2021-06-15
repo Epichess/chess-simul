@@ -210,7 +210,7 @@ class Board:
         if iteration_lin == iteration_col:
             if (move.end[0] - move.start[0]) < 0:
                 lin_sign = -1
-            elif (move.end[1] - move.start[1]) < 0:
+            if (move.end[1] - move.start[1]) < 0:
                 col_sign = -1
 
             for i in range(1, iteration_lin - 1):
