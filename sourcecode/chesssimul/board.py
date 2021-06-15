@@ -253,7 +253,7 @@ class Board:
         col_sign: int = 1
 
         # si le déplacement se fait bien en ligne droite
-        if move.end[0] != move.start[0] and move.end[1] == move.start[1] or move.end[0] == move.start[0] and move.end[1] != move.start[1]:
+        if (move.end[0] != move.start[0] and move.end[1] == move.start[1]) or (move.end[0] == move.start[0] and move.end[1] != move.start[1]):
 
             # dans quelle direction se déplace t'on
             if (move.end[0] - move.start[0]) < 0:
