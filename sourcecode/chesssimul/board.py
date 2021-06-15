@@ -48,18 +48,14 @@ class Board:
         square_list = list(square)
         return self.board[Lines.get(square_list[1])][Columns.get(square_list[0])]
 
-    # def switcher_make_move(self, move: Move):
-    #     start_square: Square = self.board[move.start[0]][move.start[1]]
-    #     type_piece_start: PieceType = start_square.piece.kind
-    #     switcher = {
-    #         PieceType.KING: self.move_knight(move),
-    #         PieceType.QUEEN,
-    #         PieceType.ROOK,
-    #         PieceType.BISHOP,
-    #         PieceType.KNIGHT,
-    #         PieceType.KNIGHT,
-    #     }
-    #     return switcher.get(type_piece_start, None)
+    def switcher_make_move(self, move: Move):
+        start_square: Square = self.board[move.start[0]][move.start[1]]
+        type_piece_start: PieceType = start_square.piece.kind
+        switcher = {
+            PieceType.KNIGHT: self.move_knight(move),
+            PieceType.PAWN: self.move_pawn(move),
+        }
+        return switcher.get(type_piece_start, None)
 
     def setEnPassantTargetSquare(self, line: int, column: int):
         self.en_passant_target_square = (line, column)
@@ -128,6 +124,7 @@ class Board:
             if not (start_square.isEmpty()):
                 type_piece_start: PieceType = start_square.piece.kind
                 print(type_piece_start)
+                self.switcher_make_move(move)
                 if type_piece_start == PieceType.KNIGHT:
                     print("vérification du coup du cavalier")
                     return self.move_knight(move)
