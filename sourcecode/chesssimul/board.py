@@ -261,6 +261,7 @@ class Board:
             elif (move.end[1] - move.start[1]) < 0:
                 col_sign = -1
 
+            # déplacement en ligne
             if move.end[0] != move.start[0]:
                 for i in range(1, iteration_lin):
                     if not self.board[move.start[0] + lin_sign * i][move.start[1]].isEmpty():
@@ -272,6 +273,7 @@ class Board:
                 # si elle n'est pas vide et que c'est l'emplacement finale
                 else:
                     return self.take_piece(move)
+            # déplacement en colonne
             elif move.end[1] != move.start[1]:
                 for i in range(1, iteration_col):
                     if not self.board[move.start[0]][move.start[1] + col_sign * i].isEmpty():
