@@ -17,7 +17,7 @@ class Color(Enum):
     WHITE = 1
 
 
-class Piece():
+class Piece:
     kind: PieceType
     color: Color
 
