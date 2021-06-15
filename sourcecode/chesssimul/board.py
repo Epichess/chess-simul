@@ -237,31 +237,30 @@ class Board:
         end_square: Square = self.board[move.end[0]][move.end[1]]
         # Pawns can only move forward one square at a time
         if start_square.piece.color == Color.BLACK:
-            if move.end[0] == move.start[0] + 1 and move.end[1] == move.start[1] and end_square.isEmpty:
+            if move.end[0] == move.start[0] + 1 and move.end[1] == move.start[1] and end_square.isEmpty():
                 if move.end[0] == 7:
                     self.promotion(move)
                 else:
                     self.move_piece(move)
             # except for their very first move where they can move forward two squares.
             elif move.end[0] == move.start[0] + 2 and move.start[0] == 1 and move.end[1] == move.start[
-                1] and end_square.isEmpty:
+                1] and end_square.isEmpty():
                 self.setEnPassantTargetSquare(move.end[0] - 1, move.end[1])
                 self.move_piece(move)
             # Pawns can only capture one square diagonally in front of them
             elif move.end[0] == move.start[0] + 1 and move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1:
-                if end_square.isEmpty is False:
+                if end_square.isEmpty() is False:
                     self.take_piece(move)
                 else:
                     print("cannot move pawn here.")
                     return False
         elif start_square.piece.color == Color.WHITE:
-            if move.end[0] == move.start[0] - 1 and move.end[1] == move.start[1] and end_square.isEmpty:
+            if move.end[0] == move.start[0] - 1 and move.end[1] == move.start[1] and end_square.isEmpty():
                 if move.end[0] == 0:
                     self.promotion(move)
                 else:
                     self.move_piece(move)
-            elif move.end[0] == move.start[0] - 2 and move.start[0] == 6 and move.end[1] == move.start[
-                1] and end_square.isEmpty:
+            elif move.end[0] == move.start[0] - 2 and move.start[0] == 6 and move.end[1] == move.start[1] and end_square.isEmpty():
                 self.setEnPassantTargetSquare(move.end[0] + 1, move.end[1])
                 self.move_piece(move)
             elif move.end[0] == move.start[0] - 1 and move.end[1] == move.start[1] - 1 or move.end[1] == move.start[
