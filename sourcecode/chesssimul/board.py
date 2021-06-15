@@ -285,6 +285,7 @@ class Board:
                     return self.take_piece(move)
         else:
             print("Impossible de déplacer la tour à cet endroit")
+            return False
     
     def move_pawn(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
