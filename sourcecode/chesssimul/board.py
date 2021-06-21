@@ -1,7 +1,7 @@
-
 from square import Square
 from piece import *
 from coup import Move
+from typing import Callable
 
 IndexToLine = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 IndexToColumn = ['8', '7', '6', '5', '4', '3', '2', '1']
@@ -47,15 +47,6 @@ class Board:
     def getSquare(self, square: str) -> Square:
         square_list = list(square)
         return self.board[Lines.get(square_list[1])][Columns.get(square_list[0])]
-
-    def switcher_make_move(self, move: Move):
-        start_square: Square = self.board[move.start[0]][move.start[1]]
-        type_piece_start: PieceType = start_square.piece.kind
-        switcher = {
-            PieceType.KNIGHT: self.move_knight(move),
-            PieceType.PAWN: self.move_pawn(move),
-        }
-        return switcher.get(type_piece_start, None)
 
     def setEnPassantTargetSquare(self, line: int, column: int):
         self.en_passant_target_square = (line, column)
@@ -109,6 +100,9 @@ class Board:
             board_string += '\n'
         return board_string
 
+    def __str__(self):
+        return self.to_unicode()
+
     def move(self, lam: str):
         lamlist = list(lam)
         pawn_passant = ''
@@ -118,30 +112,37 @@ class Board:
         start_square.piece = None
 
     def make_move(self, move: Move) -> bool:
-        self.move_list.append(move)
-        if move.end[0] in range(0, 8) and move.end[1] in range(0, 8):
+        is_move_valid: bool
+
+        move_switcher: dict[PieceType, Callable] = {
+            PieceType.PAWN: self.move_pawn,
+            PieceType.KNIGHT: self.move_knight,
+            PieceType.ROOK: self.move_rook,
+            PieceType.BISHOP: self.move_bishop,
+            PieceType.QUEEN: self.move_queen,
+            PieceType.KING: self.move_king
+        }
+
+        if 0 <= move.end[0] <= 7 and 0 <= move.end[1] <= 7:
+            # postion de la pièce avant son déplacement dans l'échiquier
             start_square: Square = self.board[move.start[0]][move.start[1]]
             if not (start_square.isEmpty()):
                 type_piece_start: PieceType = start_square.piece.kind
-                print(type_piece_start)
-                self.switcher_make_move(move)
-                if type_piece_start == PieceType.KNIGHT:
-                    print("vérification du coup du cavalier")
-                    return self.move_knight(move)
-                elif type_piece_start == PieceType.BISHOP:
-                    print("vérification du coup du fou")
-                    return self.move_bishop(move)
-                elif type_piece_start == PieceType.PAWN:
-                    print("vérification du coup du pion")
-                    return self.move_pawn(move)
-                else:
-                    return False
+                is_move_valid = move_switcher.get(type_piece_start)(move)
             else:
-                print("No piece to move")
-                return False
+                print("Aucune pièce à déplacer")
+                is_move_valid = False
         else:
-            print("déplacement d'un pion en dehors de l'échiquier")
-            return False
+            print("déplacement d'une pièce en dehors de l'échiquier")
+            is_move_valid = False
+
+        if is_move_valid:
+            self.move_list.append(move)
+            if self.to_move == Color.WHITE:
+                self.to_move = Color.BLACK
+            else:
+                self.to_move = Color.WHITE
+        return is_move_valid
 
     def take_piece(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
@@ -162,6 +163,14 @@ class Board:
         print("piece moved")
         return True
 
+    def check_pin(self, move: Move) -> bool:
+        for lin in range(8):
+            for col in range(8):
+                if self.board[lin][col].piece.kind == PieceType.KING:
+                    for i in range(lin, 8):
+                        if self.board[i][col]:
+                            print("pas fini")
+
     def move_knight(self, move: Move) -> bool:
         # postion de la pièce avant son déplacement dans l'échiquier
         start_square: Square = self.board[move.start[0]][move.start[1]]
@@ -169,10 +178,11 @@ class Board:
         end_square: Square = self.board[move.end[0]][move.end[1]]
         if move.end[0] == move.start[0] + 2 or move.end[0] == move.start[0] - 2:
             if move.end[1] == move.start[1] + 1 or move.end[1] == move.start[1] - 1:
-                if end_square.isEmpty() is False:
+                if end_square.isEmpty():
+                    return self.move_piece(move)
+                elif not end_square.isEmpty():
                     return self.take_piece(move)
                 else:
-                    print("got here")
                     return self.move_piece(move)
             else:
                 print("Impossible de déplacer le cavalier à cet endroit")
@@ -193,54 +203,176 @@ class Board:
 
     def move_bishop(self, move: Move) -> bool:
 
-        # variable test
-        self.board[6][1].piece = None
+        iteration_lin: int = abs(move.end[0] - move.start[0])
+        iteration_col: int = abs(move.end[1] - move.start[1])
+        lin_sign: int = 1
+        col_sign: int = 1
 
-        print(range(move.start[0], move.end[0]))
-        # postion de la pièce avant son déplacement dans l'échiquier
-        start_square: Square = self.board[move.start[0]][move.start[1]]
-        # postion de la pièce après son déplacement dans l'échiquier
-        end_square: Square = self.board[move.end[0]][move.end[1]]
-        # Pion sur le chemin du fou
-        for line in range(move.end[0]):
-            print("line")
-            print(line)
-            # if (move.start[0] == line):
+        if iteration_lin == iteration_col:
+            if (move.end[0] - move.start[0]) < 0:
+                lin_sign = -1
+            if (move.end[1] - move.start[1]) < 0:
+                col_sign = -1
 
-            for col in move.start[1:move.end[1]]:
-                print(col)
-                if not (self.board[line][col].isEmpty()):
-                    ###Pièce sur le chemin du fou
-                    print("Une pièce bloque la diagonale du fou")
-                    break
-                elif (line == move.end[0] and col == move.end[1]):
-                    if (end_square.piece.color == start_square.piece.color):
-                        ###Pièce de même color
-                        print("prise impossible, pièce de même couleur")
-                        break
-                    if (end_square.piece.color != start_square.piece.color):
-                        self.board[move.end[0]][move.end[1]] = start_square
-        print('end')
+            for i in range(1, iteration_lin):
+                # si la case testée n'est pas vide et qu'elle n'est pas l'emplacement finale de la pièce
+                if not self.board[move.start[0] + lin_sign * i][move.start[1] + col_sign * i].isEmpty():
+                    print("Une pièce bloque le passage du fou")
+                    return False
+            # si elle est vide et l'emplacement finale
+            if self.board[move.end[0]][move.end[1]].isEmpty():
+                return self.move_piece(move)
+            # si elle n'est pas vide et que c'est l'emplacement finale
+            else:
+                return self.take_piece(move)
+        else:
+            return False
+
+    def move_rook(self, move: Move) -> bool:
+        iteration_lin: int = abs(move.end[0] - move.start[0])
+        iteration_col: int = abs(move.end[1] - move.start[1])
+
+        lin_sign: int = 1
+        col_sign: int = 1
+
+        # si le déplacement se fait bien en ligne droite
+        if (move.end[0] != move.start[0] and move.end[1] == move.start[1]) or (
+                move.end[0] == move.start[0] and move.end[1] != move.start[1]):
+
+            # dans quelle direction se déplace t'on
+            if (move.end[0] - move.start[0]) < 0:
+                lin_sign = -1
+            elif (move.end[1] - move.start[1]) < 0:
+                col_sign = -1
+
+            # déplacement en ligne
+            if move.end[0] != move.start[0]:
+                for i in range(1, iteration_lin):
+                    if not self.board[move.start[0] + lin_sign * i][move.start[1]].isEmpty():
+                        print("Une pièce bloque le passage de la tour")
+                        return False
+                # si elle est vide et l'emplacement finale
+                if self.board[move.end[0]][move.end[1]].isEmpty():
+                    return self.move_piece(move)
+                # si elle n'est pas vide et que c'est l'emplacement finale
+                else:
+                    return self.take_piece(move)
+            # déplacement en colonne
+            elif move.end[1] != move.start[1]:
+                for i in range(1, iteration_col):
+                    if not self.board[move.start[0]][move.start[1] + col_sign * i].isEmpty():
+                        print("Une pièce bloque le passage de la tour")
+                        return False
+                # si elle est vide et l'emplacement finale
+                if self.board[move.end[0]][move.end[1]].isEmpty():
+                    return self.move_piece(move)
+                # si elle n'est pas vide et que c'est l'emplacement finale
+                else:
+                    return self.take_piece(move)
+        else:
+            print("Impossible de déplacer la tour à cet endroit")
+            return False
+
+    def move_queen(self, move: Move) -> bool:
+
+        iteration_lin: float = abs(move.end[0] - move.start[0])
+        iteration_col: float = abs(move.end[1] - move.start[1])
+
+        lin_sign: int = 1
+        col_sign: int = 1
+
+        # si le déplacement se fait bien en ligne droite
+        if (move.end[0] != move.start[0] and move.end[1] == move.start[1]) or (
+                move.end[0] == move.start[0] and move.end[1] != move.start[1]):
+
+            # dans quelle direction se déplace t'on
+            if (move.end[0] - move.start[0]) < 0:
+                lin_sign = -1
+            elif (move.end[1] - move.start[1]) < 0:
+                col_sign = -1
+
+            # déplacement en ligne
+            if move.end[0] != move.start[0]:
+                for i in range(1, iteration_lin):
+                    if not self.board[move.start[0] + lin_sign * i][move.start[1]].isEmpty():
+                        print("Une pièce bloque le passage de la dame")
+                        return False
+                # si elle est vide et l'emplacement finale
+                if self.board[move.end[0]][move.end[1]].isEmpty():
+                    return self.move_piece(move)
+                # si elle n'est pas vide et que c'est l'emplacement finale
+                else:
+                    return self.take_piece(move)
+            # déplacement en colonne
+            elif move.end[1] != move.start[1]:
+                for i in range(1, iteration_col):
+                    if not self.board[move.start[0]][move.start[1] + col_sign * i].isEmpty():
+                        print("Une pièce bloque le passage de la dame")
+                        return False
+                # si elle est vide et l'emplacement finale
+                if self.board[move.end[0]][move.end[1]].isEmpty():
+                    return self.move_piece(move)
+                # si elle n'est pas vide et que c'est l'emplacement finale
+                else:
+                    return self.take_piece(move)
+
+        # si le déplacement se fait en diagonale
+        elif iteration_lin == iteration_col:
+            if (move.end[0] - move.start[0]) < 0:
+                lin_sign = -1
+            if (move.end[1] - move.start[1]) < 0:
+                col_sign = -1
+
+            for i in range(1, iteration_lin):
+                # si la case testée n'est pas vide et qu'elle n'est pas l'emplacement finale de la pièce
+                if not self.board[move.start[0] + lin_sign * i][move.start[1] + col_sign * i].isEmpty():
+                    print("Une pièce bloque le passage de la dame")
+                    return False
+            # si elle est vide et l'emplacement finale
+            if self.board[move.end[0]][move.end[1]].isEmpty():
+                return self.move_piece(move)
+            # si elle n'est pas vide et que c'est l'emplacement finale
+            else:
+                return self.take_piece(move)
+        else:
+            print("Impossible de déplacer la dame à cet endroit")
+            return False
+
+    def move_king(self, move: Move) -> bool:
+
+        if (move.start[0] - 1 <= move.end[0] <= move.start[0] + 1) and (
+                move.start[1] - 1 <= move.end[1] <= move.start[1] + 1):
+            # si la case est vide et c'est l'emplacement final
+            if self.board[move.end[0]][move.end[1]].isEmpty():
+                return self.move_piece(move)
+            # si elle n'est pas vide et que c'est l'emplacement final
+            else:
+                return self.take_piece(move)
+        else:
+            print("Impossible de déplacer le roi à cet endroit")
+            return False
 
     def move_pawn(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
         end_square: Square = self.board[move.end[0]][move.end[1]]
-        # Pawns can only move forward one square at a time
+
         if start_square.piece.color == Color.BLACK:
-            if move.end[0] == move.start[0] + 1 and move.end[1] == move.start[1] and end_square.isEmpty():
-                if move.end[0] == 7:
-                    return self.promotion(move)
-                else:
-                    return self.move_piece(move)
-            # except for their very first move where they can move forward two squares.
-            elif move.end[0] == move.start[0] + 2 and move.start[0] == 1 and move.end[1] == move.start[
-                1] and end_square.isEmpty():
-                self.setEnPassantTargetSquare(move.end[0] - 1, move.end[1])
-                return self.move_piece(move)
-            # Pawns can only capture one square diagonally in front of them
-            elif move.end[0] == move.start[0] + 1 and (move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1):
-                if end_square.isEmpty() is False:
+            if move.end[1] == move.start[1] and end_square.isEmpty():
+                # Pawns can only move forward one square at a time
+                if move.end[0] == move.start[0] + 1:
                     if move.end[0] == 7:
+                        return self.promotion(move)
+                    else:
+                        return self.move_piece(move)
+                # except for their very first move where they can move forward two squares.
+                elif move.end[0] == move.start[0] + 2 and move.start[0] == 1:
+                    self.setEnPassantTargetSquare(move.end[0] - 1, move.end[1])
+                    return self.move_piece(move)
+            # Pawns can only capture one square diagonally in front of them
+            elif move.end[0] == move.start[0] + 1 and (
+                    move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1):
+                if end_square.isEmpty() is False:
+                    if move.end[0] == 7 and end_square.piece.color != start_square.piece.color:
                         return self.promotion(move)
                     else:
                         return self.take_piece(move)
@@ -248,24 +380,25 @@ class Board:
                     print("cannot move pawn here.")
                     return False
         elif start_square.piece.color == Color.WHITE:
-            if move.end[0] == move.start[0] - 1 and move.end[1] == move.start[1] and end_square.isEmpty():
-                if move.end[0] == 0:
-                    return self.promotion(move)
-                else:
-                    return self.move_piece(move)
-            elif move.end[0] == move.start[0] - 2 and move.start[0] == 6 and move.end[1] == move.start[
-                1] and end_square.isEmpty():
-                self.setEnPassantTargetSquare(move.end[0] + 1, move.end[1])
-                return self.move_piece(move)
-            elif move.end[0] == move.start[0] - 1 and (move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1):
-                if end_square.isEmpty() is False:
+            if move.end[1] == move.start[1] and end_square.isEmpty():
+                if move.end[0] == move.start[0] - 1:
                     if move.end[0] == 0:
                         return self.promotion(move)
                     else:
-                        return self.take_piece(move)
-                else:
-                    print("cannot move pawn here.")
-                    return False
+                        return self.move_piece(move)
+                elif move.end[0] == move.start[0] - 2 and move.start[0] == 6:
+                    self.setEnPassantTargetSquare(move.end[0] + 1, move.end[1])
+                    return self.move_piece(move)
+                elif move.end[0] == move.start[0] - 1 and (
+                        move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1):
+                    if end_square.isEmpty() is False:
+                        if move.end[0] == 0 and end_square.piece.color != start_square.piece.color:
+                            return self.promotion(move)
+                        else:
+                            return self.take_piece(move)
+                    else:
+                        print("cannot move pawn here.")
+                        return False
         else:
             return False
 

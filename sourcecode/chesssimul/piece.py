@@ -49,6 +49,9 @@ class Piece:
         }
         return switcher.get(self.color).get(self.kind)
 
+    def __str__(self):
+        return self.to_unicode()
+
     def piece_to_str(self) -> str:
         white_piece: dict[PieceType, str] = {
             PieceType.KING: 'K',
