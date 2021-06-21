@@ -133,7 +133,8 @@ class Board:
             PieceType.KNIGHT: self.move_knight,
             PieceType.ROOK: self.move_rook,
             PieceType.BISHOP: self.move_bishop,
-            PieceType.QUEEN: self.move_queen
+            PieceType.QUEEN: self.move_queen,
+            PieceType.KING: self.move_king
         }
 
         if 0 <= move.end[0] <= 7 and 0 <= move.end[1] <= 7:
@@ -348,6 +349,20 @@ class Board:
         else:
             print("Impossible de déplacer la dame à cet endroit")
             return False
+        
+    def move_king(self, move: Move) -> bool:
+
+        if (move.start[0] - 1 <= move.end[0] <= move.start[0] + 1) and (move.start[1] - 1 <= move.end[1] <= move.start[1] + 1):
+            # si la case est vide et c'est l'emplacement final
+            if self.board[move.end[0]][move.end[1]].isEmpty():
+                return self.move_piece(move)
+            # si elle n'est pas vide et que c'est l'emplacement final
+            else:
+                return self.take_piece(move)
+        else:
+            print("Impossible de déplacer le roi à cet endroit")
+            return False
+
 
     def move_pawn(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
