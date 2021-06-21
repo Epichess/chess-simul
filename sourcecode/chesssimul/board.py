@@ -144,6 +144,9 @@ class Board:
                 if type_piece_start == PieceType.ROOK:
                     print("vérification du coup de la tour")
                     is_move_valid = self.move_rook(move)
+                if type_piece_start == PieceType.QUEEN:
+                    print("vérification du coup de la dame")
+                    is_move_valid == self.move_queen(move)
             else:
                 print("Aucune pièce à déplacer")
                 is_move_valid = False
@@ -285,6 +288,70 @@ class Board:
                     return self.take_piece(move)
         else:
             print("Impossible de déplacer la tour à cet endroit")
+            return False
+
+    def move_queen(self, move: Move) -> bool:
+
+        iteration_lin: float = abs(move.end[0] - move.start[0])
+        iteration_col: float = abs(move.end[1] - move.start[1])
+
+        lin_sign: int = 1
+        col_sign: int = 1
+
+        # si le déplacement se fait bien en ligne droite
+        if (move.end[0] != move.start[0] and move.end[1] == move.start[1]) or (move.end[0] == move.start[0] and move.end[1] != move.start[1]):
+
+            # dans quelle direction se déplace t'on
+            if (move.end[0] - move.start[0]) < 0:
+                lin_sign = -1
+            elif (move.end[1] - move.start[1]) < 0:
+                col_sign = -1
+
+            # déplacement en ligne
+            if move.end[0] != move.start[0]:
+                for i in range(1, iteration_lin):
+                    if not self.board[move.start[0] + lin_sign * i][move.start[1]].isEmpty():
+                        print("Une pièce bloque le passage de la dame")
+                        return False
+                # si elle est vide et l'emplacement finale
+                if self.board[move.end[0]][move.end[1]].isEmpty():
+                    return self.move_piece(move)
+                # si elle n'est pas vide et que c'est l'emplacement finale
+                else:
+                    return self.take_piece(move)
+            # déplacement en colonne
+            elif move.end[1] != move.start[1]:
+                for i in range(1, iteration_col):
+                    if not self.board[move.start[0]][move.start[1] + col_sign * i].isEmpty():
+                        print("Une pièce bloque le passage de la dame")
+                        return False
+                # si elle est vide et l'emplacement finale
+                if self.board[move.end[0]][move.end[1]].isEmpty():
+                    return self.move_piece(move)
+                # si elle n'est pas vide et que c'est l'emplacement finale
+                else:
+                    return self.take_piece(move)
+
+        #si le déplacement se fait en diagonale
+        elif iteration_lin == iteration_col:
+            if (move.end[0] - move.start[0]) < 0:
+                lin_sign = -1
+            if (move.end[1] - move.start[1]) < 0:
+                col_sign = -1
+
+            for i in range(1, iteration_lin):
+                # si la case testée n'est pas vide et qu'elle n'est pas l'emplacement finale de la pièce
+                if not self.board[move.start[0] + lin_sign * i][move.start[1] + col_sign * i].isEmpty():
+                    print("Une pièce bloque le passage de la dame")
+                    return False
+            # si elle est vide et l'emplacement finale
+            if self.board[move.end[0]][move.end[1]].isEmpty():
+                return self.move_piece(move)
+            # si elle n'est pas vide et que c'est l'emplacement finale
+            else:
+                return self.take_piece(move)
+        else:
+            print("Impossible de déplacer la dame à cet endroit")
             return False
 
     def move_pawn(self, move: Move) -> bool:
