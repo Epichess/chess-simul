@@ -2,6 +2,7 @@
 from square import Square
 from piece import *
 from coup import Move
+from typing import Callable
 
 IndexToLine = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 IndexToColumn = ['8', '7', '6', '5', '4', '3', '2', '1']
@@ -125,28 +126,22 @@ class Board:
         start_square.piece = None
 
     def make_move(self, move: Move) -> bool:
-        is_move_valid = False
+        is_move_valid: bool
+
+        move_switcher: dict[PieceType, Callable] = {
+            PieceType.PAWN: self.move_pawn,
+            PieceType.KNIGHT: self.move_knight,
+            PieceType.ROOK: self.move_rook,
+            PieceType.BISHOP: self.move_bishop,
+            PieceType.QUEEN: self.move_queen
+        }
 
         if 0 <= move.end[0] <= 7 and 0 <= move.end[1] <= 7:
             # postion de la pièce avant son déplacement dans l'échiquier
             start_square: Square = self.board[move.start[0]][move.start[1]]
             if not (start_square.isEmpty()):
                 type_piece_start: PieceType = start_square.piece.kind
-                if type_piece_start == PieceType.KNIGHT:
-                    print("vérification du coup du cavalier")
-                    is_move_valid = self.move_knight(move)
-                if type_piece_start == PieceType.BISHOP:
-                    print("vérification du coup du fou")
-                    is_move_valid = self.move_bishop(move)
-                if type_piece_start == PieceType.PAWN:
-                    print("vérification du coup du pion")
-                    is_move_valid = self.move_pawn(move)
-                if type_piece_start == PieceType.ROOK:
-                    print("vérification du coup de la tour")
-                    is_move_valid = self.move_rook(move)
-                if type_piece_start == PieceType.QUEEN:
-                    print("vérification du coup de la dame")
-                    is_move_valid == self.move_queen(move)
+                is_move_valid = move_switcher.get(type_piece_start)(move)
             else:
                 print("Aucune pièce à déplacer")
                 is_move_valid = False
