@@ -147,6 +147,10 @@ class Board:
                 if type_piece_start == PieceType.QUEEN:
                     print("vérification du coup de la dame")
                     is_move_valid == self.move_queen(move)
+                if type_piece_start == PieceType.KING:
+                    print("vérification du coup du roi")
+                    is_move_valid == self.move_king(move)
+
             else:
                 print("Aucune pièce à déplacer")
                 is_move_valid = False
@@ -353,6 +357,20 @@ class Board:
         else:
             print("Impossible de déplacer la dame à cet endroit")
             return False
+        
+    def move_king(self, move: Move) -> bool:
+
+        if (move.start[0] - 1 <= move.end[0] <= move.start[0] + 1) and (move.start[1] - 1 <= move.end[1] <= move.start[1] + 1):
+            # si elle est vide et l'emplacement finale
+            if self.board[move.end[0]][move.end[1]].isEmpty():
+                return self.move_piece(move)
+            # si elle n'est pas vide et que c'est l'emplacement finale
+            else:
+                return self.take_piece(move)
+        else:
+            print("Impossible de déplacer le roi à cet endroit")
+            return False
+
 
     def move_pawn(self, move: Move) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
