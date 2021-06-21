@@ -361,10 +361,10 @@ class Board:
     def move_king(self, move: Move) -> bool:
 
         if (move.start[0] - 1 <= move.end[0] <= move.start[0] + 1) and (move.start[1] - 1 <= move.end[1] <= move.start[1] + 1):
-            # si elle est vide et l'emplacement finale
+            # si la case est vide et c'est l'emplacement final
             if self.board[move.end[0]][move.end[1]].isEmpty():
                 return self.move_piece(move)
-            # si elle n'est pas vide et que c'est l'emplacement finale
+            # si elle n'est pas vide et que c'est l'emplacement final
             else:
                 return self.take_piece(move)
         else:
