@@ -196,8 +196,6 @@ class Board:
                     return self.move_piece(move)
                 elif not end_square.isEmpty():
                     return self.take_piece(move)
-                else:
-                    return self.move_piece(move)
             else:
                 print("Impossible de déplacer le cavalier à cet endroit")
                 return False
