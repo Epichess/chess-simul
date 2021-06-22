@@ -268,7 +268,6 @@ class Board:
                         else:
                             print("Pas d'échec")
                             return False
-        return False
 
     def move_knight(self, move: Move, check: bool) -> bool:
         # postion de la pièce avant son déplacement dans l'échiquier
