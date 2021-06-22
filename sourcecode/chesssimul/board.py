@@ -298,7 +298,7 @@ class Board:
             print("Impossible de déplacer le cavalier à cet endroit")
             return False
 
-    def move_bishop(self, move: Move) -> bool:
+    def move_bishop(self, move: Move, check: bool) -> bool:
 
         iteration_lin: int = abs(move.end[0] - move.start[0])
         iteration_col: int = abs(move.end[1] - move.start[1])
@@ -325,7 +325,7 @@ class Board:
         else:
             return False
 
-    def move_rook(self, move: Move) -> bool:
+    def move_rook(self, move: Move, check: bool) -> bool:
         iteration_lin: int = abs(move.end[0] - move.start[0])
         iteration_col: int = abs(move.end[1] - move.start[1])
 
@@ -369,7 +369,7 @@ class Board:
             print("Impossible de déplacer la tour à cet endroit")
             return False
 
-    def move_queen(self, move: Move) -> bool:
+    def move_queen(self, move: Move, check: bool) -> bool:
 
         iteration_lin: float = abs(move.end[0] - move.start[0])
         iteration_col: float = abs(move.end[1] - move.start[1])
@@ -433,7 +433,7 @@ class Board:
             print("Impossible de déplacer la dame à cet endroit")
             return False
         
-    def move_king(self, move: Move) -> bool:
+    def move_king(self, move: Move, check: bool) -> bool:
 
         if (move.start[0] - 1 <= move.end[0] <= move.start[0] + 1) and (move.start[1] - 1 <= move.end[1] <= move.start[1] + 1):
             # si la case est vide et c'est l'emplacement final
@@ -447,7 +447,7 @@ class Board:
             return False
 
 
-    def move_pawn(self, move: Move) -> bool:
+    def move_pawn(self, move: Move, check: bool) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
         end_square: Square = self.board[move.end[0]][move.end[1]]
 
