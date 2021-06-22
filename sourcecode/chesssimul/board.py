@@ -197,13 +197,78 @@ class Board:
         color_piece: Color = self.board[move.end[0]][move.end[1]].piece.color
         for lin in range(8):
             for col in range(8):
-                if self.board[lin][col].piece.kind == PieceType.KING and self.board[lin][col].piece.color != color_piece:
-                    if self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KNIGHT:
-                        if self.move_knight([move.end, [lin, col]], True):
-                            if color_piece == Color.WHITE:
-                                self.black_check = True
+                if not self.board[lin][col].isEmpty():
+                    if (self.board[lin][col].piece.kind == PieceType.KING) and (self.board[lin][col].piece.color != color_piece):
+                        if self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KNIGHT:
+                            if self.move_knight(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
                             else:
-                                self.white_check = True
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.BISHOP:
+                            if self.move_bishop(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.ROOK:
+                            if self.move_rook(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.QUEEN:
+                            if self.move_queen(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KING:
+                            if self.move_king(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KING:
+                            if self.move_pawn(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        else:
+                            print("Pas d'échec")
+                            return False
+        return False
 
     def move_knight(self, move: Move, check: bool) -> bool:
         # postion de la pièce avant son déplacement dans l'échiquier
