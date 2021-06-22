@@ -41,7 +41,9 @@ class Board:
     en_passant_target_square: tuple[int, int] or None
     halfmove_clock: int
     fullmove_number: int
-
+    white_check: bool
+    black_check: bool
+    
     def __init__(self):
         self.move_list = list()
 
@@ -73,6 +75,8 @@ class Board:
         self.can_white_king_side_castle = True
         self.can_white_queen_side_castle = True
         self.en_passant_target_square = None
+        self.white_check = False
+        self.black_check = False
         self.halfmove_clock = 0
         self.fullmove_number = 0
         for lin in range(8):
@@ -142,7 +146,7 @@ class Board:
             start_square: Square = self.board[move.start[0]][move.start[1]]
             if not (start_square.isEmpty()):
                 type_piece_start: PieceType = start_square.piece.kind
-                is_move_valid = move_switcher.get(type_piece_start)(move)
+                is_move_valid = move_switcher.get(type_piece_start)(move, False)
             else:
                 print("Aucune pièce à déplacer")
                 is_move_valid = False
@@ -151,6 +155,7 @@ class Board:
             is_move_valid = False
 
         if is_move_valid:
+            self.king_check(move)
             self.move_list.append(move)
             if self.to_move == Color.WHITE:
                 self.to_move = Color.BLACK
@@ -158,24 +163,27 @@ class Board:
                 self.to_move = Color.WHITE
         return is_move_valid
 
-    def take_piece(self, move: Move) -> bool:
+    def take_piece(self, move: Move, check: bool) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
         end_square: Square = self.board[move.end[0]][move.end[1]]
         if end_square.piece.color != start_square.piece.color:
-            self.board[move.end[0]][move.end[1]].piece = start_square.piece
-            self.board[move.start[0]][move.start[1]].piece = None
+            if check is False:
+                self.board[move.end[0]][move.end[1]].piece = start_square.piece
+                self.board[move.start[0]][move.start[1]].piece = None
             print("piece taken")
             return True
         else:
             print("impossible to take piece of your own color")
             return False
 
-    def move_piece(self, move: Move) -> bool:
-        start_square: Square = self.board[move.start[0]][move.start[1]]
-        self.board[move.end[0]][move.end[1]].piece = start_square.piece
-        self.board[move.start[0]][move.start[1]].piece = None
-        print("piece moved")
+    def move_piece(self, move: Move, check: bool) -> bool:
+        if check is False:
+            start_square: Square = self.board[move.start[0]][move.start[1]]
+            self.board[move.end[0]][move.end[1]].piece = start_square.piece
+            self.board[move.start[0]][move.start[1]].piece = None
+            print("piece moved")
         return True
+        
 
     def check_pin(self, move: Move) -> bool:
         for lin in range(8):
@@ -185,7 +193,83 @@ class Board:
                         if self.board[i][col]:
                             print("pas fini")
 
-    def move_knight(self, move: Move) -> bool:
+    def king_check(self, move: Move) -> bool:
+        color_piece: Color = self.board[move.end[0]][move.end[1]].piece.color
+        for lin in range(8):
+            for col in range(8):
+                if not self.board[lin][col].isEmpty():
+                    if (self.board[lin][col].piece.kind == PieceType.KING) and (self.board[lin][col].piece.color != color_piece):
+                        if self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KNIGHT:
+                            if self.move_knight(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.BISHOP:
+                            if self.move_bishop(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.ROOK:
+                            if self.move_rook(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.QUEEN:
+                            if self.move_queen(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KING:
+                            if self.move_king(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KING:
+                            if self.move_pawn(Move(move.end, [lin, col]), True):
+                                if color_piece == Color.WHITE:
+                                    self.black_check = True
+                                else:
+                                    self.white_check = True
+                                print("check black / white = ", self.black_check, self.white_check)
+                                return True
+                            else:
+                                print("pas d'échec")
+                                return False
+                        else:
+                            print("Pas d'échec")
+                            return False
+
+    def move_knight(self, move: Move, check: bool) -> bool:
         # postion de la pièce avant son déplacement dans l'échiquier
         start_square: Square = self.board[move.start[0]][move.start[1]]
         # postion de la pièce après son déplacement dans l'échiquier
@@ -193,11 +277,9 @@ class Board:
         if move.end[0] == move.start[0] + 2 or move.end[0] == move.start[0] - 2:
             if move.end[1] == move.start[1] + 1 or move.end[1] == move.start[1] - 1:
                 if end_square.isEmpty():
-                    return self.move_piece(move)
+                    return self.move_piece(move, check)
                 elif not end_square.isEmpty():
-                    return self.take_piece(move)
-                else:
-                    return self.move_piece(move)
+                    return self.take_piece(move, check)
             else:
                 print("Impossible de déplacer le cavalier à cet endroit")
                 return False
@@ -205,9 +287,9 @@ class Board:
         elif move.end[1] == move.start[1] + 2 or move.end[1] == move.start[1] - 2:
             if move.end[0] == move.start[0] + 1 or move.end[0] == move.start[0] - 1:
                 if end_square.isEmpty():
-                    return self.move_piece(move)
+                    return self.move_piece(move, check)
                 else:
-                    return self.take_piece(move)
+                    return self.take_piece(move, check)
             else:
                 print("Impossible de déplacer le cavalier à cet endroit")
                 return False
@@ -215,7 +297,7 @@ class Board:
             print("Impossible de déplacer le cavalier à cet endroit")
             return False
 
-    def move_bishop(self, move: Move) -> bool:
+    def move_bishop(self, move: Move, check: bool) -> bool:
 
         iteration_lin: int = abs(move.end[0] - move.start[0])
         iteration_col: int = abs(move.end[1] - move.start[1])
@@ -242,7 +324,7 @@ class Board:
         else:
             return False
 
-    def move_rook(self, move: Move) -> bool:
+    def move_rook(self, move: Move, check: bool) -> bool:
         iteration_lin: int = abs(move.end[0] - move.start[0])
         iteration_col: int = abs(move.end[1] - move.start[1])
 
@@ -286,7 +368,7 @@ class Board:
             print("Impossible de déplacer la tour à cet endroit")
             return False
 
-    def move_queen(self, move: Move) -> bool:
+    def move_queen(self, move: Move, check: bool) -> bool:
 
         iteration_lin: float = abs(move.end[0] - move.start[0])
         iteration_col: float = abs(move.end[1] - move.start[1])
@@ -350,7 +432,7 @@ class Board:
             print("Impossible de déplacer la dame à cet endroit")
             return False
         
-    def move_king(self, move: Move) -> bool:
+    def move_king(self, move: Move, check: bool) -> bool:
 
         if (move.start[0] - 1 <= move.end[0] <= move.start[0] + 1) and (move.start[1] - 1 <= move.end[1] <= move.start[1] + 1):
             # si la case est vide et c'est l'emplacement final
@@ -364,7 +446,7 @@ class Board:
             return False
 
 
-    def move_pawn(self, move: Move) -> bool:
+    def move_pawn(self, move: Move, check: bool) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
         end_square: Square = self.board[move.end[0]][move.end[1]]
 
