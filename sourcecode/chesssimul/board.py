@@ -1,8 +1,22 @@
-
 from square import Square
 from piece import *
-from coup import Move
+from move import Move
 from typing import Callable
+from log import *
+
+#######################################
+# create logger with 'spam_application'
+logger = logging.getLogger("My_app")
+logger.setLevel(logging.DEBUG)
+
+# create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+ch.setFormatter(CustomFormatter())
+
+logger.addHandler(ch)
+#######################################
 
 IndexToLine = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 IndexToColumn = ['8', '7', '6', '5', '4', '3', '2', '1']
@@ -43,6 +57,9 @@ class Board:
     fullmove_number: int
     white_check: bool
     black_check: bool
+    pos_piece_check: list()
+    list_piece_pin: list()
+    pin_color: list()
     
     def __init__(self):
         self.move_list = list()
@@ -51,23 +68,13 @@ class Board:
         square_list = list(square)
         return self.board[Lines.get(square_list[1])][Columns.get(square_list[0])]
 
-    # def switcher_make_move(self, move: Move):
-    #     start_square: Square = self.board[move.start[0]][move.start[1]]
-    #     type_piece_start: PieceType = start_square.piece.kind
-    #     switcher = {
-    #         PieceType.KING: self.move_knight(move),
-    #         PieceType.QUEEN,
-    #         PieceType.ROOK,
-    #         PieceType.BISHOP,
-    #         PieceType.KNIGHT,
-    #         PieceType.KNIGHT,
-    #     }
-    #     return switcher.get(type_piece_start, None)
-
     def setEnPassantTargetSquare(self, line: int, column: int):
         self.en_passant_target_square = (line, column)
 
     def init_board(self):
+        self.pin_color = list()
+        self.pos_piece_check = list()
+        self.list_piece_pin = list()
         self.board = list()
         self.to_move = Color.WHITE
         self.can_black_king_side_castle = True
@@ -144,24 +151,53 @@ class Board:
         if 0 <= move.end[0] <= 7 and 0 <= move.end[1] <= 7:
             # postion de la pièce avant son déplacement dans l'échiquier
             start_square: Square = self.board[move.start[0]][move.start[1]]
-            if not (start_square.isEmpty()):
+            # vérification qu'il y a une pièce à déplacer et qu'elle ne soit pas dans la liste list_piece_pin qui empêche l'échec de son roi
+            self.king_check()
+            if start_square.piece.color == self.to_move and (not start_square.isEmpty()) and (((move.end[0], move.end[1]) in self.list_piece_pin) or (not start_square.piece.color in self.pin_color)):
                 type_piece_start: PieceType = start_square.piece.kind
-                is_move_valid = move_switcher.get(type_piece_start)(move, False)
+                if start_square.piece.color == self.to_move:
+                    if (type_piece_start.piece.color == Color.WHITE and not self.white_check) or (type_piece_start.piece.color == Color.BLACK and not self.black_check):
+                        is_move_valid = move_switcher.get(type_piece_start)(move, False)
             else:
-                print("Aucune pièce à déplacer")
+                print("Aucune pièce à déplacer ou pièce bloquée par pin")
                 is_move_valid = False
         else:
             print("déplacement d'une pièce en dehors de l'échiquier")
             is_move_valid = False
 
         if is_move_valid:
-            self.king_check(move)
             self.move_list.append(move)
             if self.to_move == Color.WHITE:
                 self.to_move = Color.BLACK
             else:
                 self.to_move = Color.WHITE
         return is_move_valid
+
+    #def is_move_valid(self, move: Move) -> bool:
+    #        is_move_valid: bool
+    #        move.piece = self.board[move.start[0]][move.start[1]].piece
+    #        move_switcher: dict[PieceType, Callable] = {
+    #            PieceType.PAWN: self.move_pawn,
+    #            PieceType.KNIGHT: self.move_knight,
+    #            PieceType.ROOK: self.move_rook,
+    #            PieceType.BISHOP: self.move_bishop,
+    #            PieceType.QUEEN: self.move_queen,
+    #            PieceType.KING: self.move_king
+    #        }
+#
+    #        if 0 <= move.end[0] <= 7 and 0 <= move.end[1] <= 7:
+    #            start_square: Square = self.board[move.start[0]][move.start[1]]
+    #            if not (start_square.isEmpty()):
+    #                type_piece_start: PieceType = start_square.piece.kind
+    #                is_move_valid = move_switcher.get(type_piece_start)(move)
+    #            else:
+    #                print("No piece to move")
+    #                is_move_valid = False
+    #        else:
+    #            print("Trying to move piece outside of board")
+    #            is_move_valid = False
+#
+    #        return is_move_valid
 
     def take_piece(self, move: Move, check: bool) -> bool:
         start_square: Square = self.board[move.start[0]][move.start[1]]
@@ -170,7 +206,15 @@ class Board:
             if check is False:
                 self.board[move.end[0]][move.end[1]].piece = start_square.piece
                 self.board[move.start[0]][move.start[1]].piece = None
-            print("piece taken")
+                move.eat = True
+                print("piece taken")
+            if end_square.piece.kind == PieceType.KING:
+                if end_square.piece.color == Color.WHITE:
+                    self.pos_piece_check.append((move.start[0], move.start[1]))
+                    self.white_check = True
+                elif end_square.piece.color == Color.BLACK:
+                    self.pos_piece_check.append((move.start[0], move.start[1]))
+                    self.black_check = True
             return True
         else:
             print("impossible to take piece of your own color")
@@ -183,91 +227,281 @@ class Board:
             self.board[move.start[0]][move.start[1]].piece = None
             print("piece moved")
         return True
+
+    def queen_castle(self, move: Move):
+        start_square: Square = self.board[move.start[0]][move.start[1]]
+        end_square: Square = self.board[move.end[0]][move.end[1]]
+        start_line = move.start[0]
+        start_col = move.start[1]
+        rook_start_square: Square = self.board[start_line][start_col - 4]
+        rook_end_square: Square = self.board[start_line][start_col - 1]
+
+        if self.king_check():
+            rook_end_square.piece = rook_start_square.piece
+            rook_start_square.piece = None
+            end_square.piece = start_square.piece
+            start_square.piece = None
+
+            move.is_castled = True
+            move.castling = 'QUEEN_CASTLING'
+            print("Queen castling.")
+            return True
+        else:
+            print("Cannot queen castle because king will be in check.")
+            return False
+
+    def king_castle(self, move: Move):
+        start_square: Square = self.board[move.start[0]][move.start[1]]
+        end_square: Square = self.board[move.end[0]][move.end[1]]
+        start_line = move.start[0]
+        start_col = move.start[1]
+        rook_start_square: Square = self.board[start_line][start_col + 3]
+        rook_end_square: Square = self.board[start_line][start_col + 1]
+
+        if self.king_check():
+            rook_end_square.piece = rook_start_square.piece
+            rook_start_square.piece = None
+            end_square.piece = start_square.piece
+            start_square.piece = None
+
+            move.is_castled = True
+            move.castling = 'KING_CASTLING'
+            print("King castling.")
+            return True
+        else:
+            print("Cannot king castle because king will be in check.")
+            return False
+
+    def king_check(self) -> bool:
+
+        # réinitialisation de la liste des pièces qui mettent en echec le roi
+        self.pos_piece_check.clear()
+        self.list_piece_pin.clear()
+        self.pin_color.clear()
         
+        self.white_check = False
+        self.black_check = False
 
-    def check_pin(self, move: Move) -> bool:
-        for lin in range(8):
-            for col in range(8):
-                if self.board[lin][col].piece.kind == PieceType.KING:
-                    for i in range(lin, 8):
-                        if self.board[i][col]:
-                            print("pas fini")
+        move_switcher: dict[PieceType, Callable] = {
+            PieceType.ROOK: self.move_rook,
+            PieceType.BISHOP: self.move_bishop,
+            PieceType.QUEEN: self.move_queen,
+        }
+        pos_roi_blanc: tuple = tuple()
+        pos_roi_noir: tuple = tuple()
 
-    def king_check(self, move: Move) -> bool:
-        color_piece: Color = self.board[move.end[0]][move.end[1]].piece.color
+        # modélisation du board en matrice 8x8
+        model_board = list()
+        #initialisation de la matrice du board à 0
+        for i in range(8):
+        	model_board.append([0] * 8)
+
+        coup_knight: list[int] = list([2, 1])
+        sign: list[int] = list([1, -1])
         for lin in range(8):
             for col in range(8):
                 if not self.board[lin][col].isEmpty():
-                    if (self.board[lin][col].piece.kind == PieceType.KING) and (self.board[lin][col].piece.color != color_piece):
-                        if self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KNIGHT:
-                            if self.move_knight(Move(move.end, [lin, col]), True):
-                                if color_piece == Color.WHITE:
-                                    self.black_check = True
+                    type_piece_start: PieceType = self.board[lin][col].piece.kind
+
+                    #test move khight
+                    if self.board[lin][col].piece.kind == PieceType.KNIGHT:
+                        for i in range(2):
+                            for n in range(2):
+                                if 0 <= lin + sign[n] * coup_knight[i] <= 7 and 0 <= col + sign[n] * list(reversed(coup_knight))[i] <= 7:
+                                    if self.move_knight(Move([lin, col], [lin + sign[n] * coup_knight[i], col + sign[n] * list(reversed(coup_knight))[i]]), True):
+                                        model_board[lin + sign[n] * coup_knight[i]][col + sign[n] * list(reversed(coup_knight))[i]] = 1
                                 else:
-                                    self.white_check = True
-                                print("check black / white = ", self.black_check, self.white_check)
-                                return True
-                            else:
-                                print("pas d'échec")
-                                return False
-                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.BISHOP:
-                            if self.move_bishop(Move(move.end, [lin, col]), True):
-                                if color_piece == Color.WHITE:
-                                    self.black_check = True
+                                    print("déplacement hors de l'échiquier")
+                        for i in range(2):
+                            for n in range(2):
+                                if 0 <= lin + list(reversed(sign))[n] * coup_knight[i] <= 7 and 0 <= col - list(reversed(sign))[n] * list(reversed(coup_knight))[i] <= 7:
+                                    if self.move_knight(Move([lin, col], [lin + list(reversed(sign))[n] * coup_knight[i], col - list(reversed(sign))[n] * list(reversed(coup_knight))[i]]), True):
+                                        model_board[lin + list(reversed(sign))[n] * coup_knight[i]][col - list(reversed(sign))[n] * list(reversed(coup_knight))[i]] = 1
                                 else:
-                                    self.white_check = True
-                                print("check black / white = ", self.black_check, self.white_check)
-                                return True
-                            else:
-                                print("pas d'échec")
-                                return False
-                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.ROOK:
-                            if self.move_rook(Move(move.end, [lin, col]), True):
-                                if color_piece == Color.WHITE:
-                                    self.black_check = True
+                                    print("déplacement hors de l'échiquier")
+                    
+                    # test move rook et dame pour ses déplacements en lignes
+                    elif self.board[lin][col].piece.kind == PieceType.ROOK or self.board[lin][col].piece.kind == PieceType.QUEEN:
+                        for i in range(2):
+                            for j in range(8):
+                                if 0 <= lin + sign[i] * j <= 7 and 0 <= col <= 7:
+                                    if move_switcher.get(type_piece_start)(Move([lin, col], [lin + sign[i] * j, col]), True):
+                                        model_board[lin + sign[i] * j][col] = 1
+                                        # test si il y a une pièce qui empêche le check (stratégie pin)
+                                        # modifié pas testé
+                                        if not self.board[lin + sign[i] * j][col].isEmpty():
+                                            if self.board[lin + sign[i] * j][col].piece.kind != PieceType.KING:
+                                                if 0 < lin + sign[i] * j < 7 and 0 < col < 7:
+                                                    for k in range(1, 8):
+                                                        if 0 <= (lin + sign[i] * j) + (sign[i] * k) <= 7 and 0 <= col <= 7:
+                                                            if not self.board[(lin + sign[i] * j) + (sign[i] * k)][col].isEmpty():
+                                                                logger.warning("coordonné board : %s", self.board[(lin + sign[i] * j) + (sign[i] * k)][col].piece.kind)
+                                                                if self.board[(lin + sign[i] * j) + (sign[i] * k)][col].piece.kind == PieceType.KING:
+                                                                    self.list_piece_pin.append((lin + sign[i] * j, col))
+                                                                    self.pin_color.append(self.board[lin + sign[i] * j][col].piece.color)
+                                                                    logger.warning("list_piece_pin : %s", self.list_piece_pin)
+                                                                else:
+                                                                    break
                                 else:
-                                    self.white_check = True
-                                print("check black / white = ", self.black_check, self.white_check)
-                                return True
-                            else:
-                                print("pas d'échec")
-                                return False
-                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.QUEEN:
-                            if self.move_queen(Move(move.end, [lin, col]), True):
-                                if color_piece == Color.WHITE:
-                                    self.black_check = True
+                                    print("déplacement hors de l'échiquier")
+
+                        for i in range(2):
+                            for j in range(8):
+                                if 0 <= lin <= 7 and 0 <= col + sign[i] * j <= 7:
+                                    if move_switcher.get(type_piece_start)(Move([lin, col], [lin, col + sign[i] * j]), True):
+                                        model_board[lin][col + sign[i] * j] = 1
+                                        # test si il y a une pièce qui empêche le check (stratégie pin)
+                                        if not self.board[lin][col + sign[i] * j].isEmpty():
+                                            if self.board[lin][col + sign[i] * j].piece.kind != PieceType.KING:
+                                                if 0 < lin < 7 and 0 < col + sign[i] * j < 7:
+                                                # savoir le nombre de déplacement qu'il faut faire et dans quelle direction
+                                                # modifié pas testé
+                                                    for k in range(1, 8):
+                                                        if 0 <= lin <= 7 and 0 <= ((col + sign[i] * j) + (sign[i] * k)) <= 7:
+                                                            logger.warning("k et sens: %s %s", k, sign[i])
+                                                            if not self.board[lin][(col + sign[i] * j) + (sign[i] * k)].isEmpty():
+                                                                logger.warning("coordonné board : %s", self.board[lin][(col + sign[i] * j) + (sign[i] * k)].piece.kind)
+                                                                if self.board[lin][(col + sign[i] * j) + (sign[i] * k)].piece.kind == PieceType.KING:
+                                                                    logger.warning("king")
+                                                                    self.list_piece_pin.append((lin, col + sign[i] * j))
+                                                                    self.pin_color.append(self.board[lin][col + sign[i] * j].piece.color)
+                                                                    logger.warning("list_piece_pin : %s", self.list_piece_pin)
+                                                                else:
+                                                                    logger.critical("break")
+                                                                    break
                                 else:
-                                    self.white_check = True
-                                print("check black / white = ", self.black_check, self.white_check)
-                                return True
-                            else:
-                                print("pas d'échec")
-                                return False
-                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KING:
-                            if self.move_king(Move(move.end, [lin, col]), True):
-                                if color_piece == Color.WHITE:
-                                    self.black_check = True
+                                    print("déplacement hors de l'échiquier")
+
+                    # test move bishop et dame pour ses déplacements en diagonales
+                    if self.board[lin][col].piece.kind == PieceType.BISHOP or self.board[lin][col].piece.kind == PieceType.QUEEN:
+                        for i in range(2):
+                            for j in range(8):
+                                if 0 <= lin + sign[i] * j <= 7 and 0 <= col + sign[i] * j <= 7:
+                                    if move_switcher.get(type_piece_start)(Move([lin, col], [lin + sign[i] * j, col + sign[i] * j]), True):
+                                        model_board[lin + sign[i] * j][col + sign[i] * j] = 1
+                                        # test si il y a une pièce qui empêche le check (stratégie pin)
+                                        if not self.board[lin + sign[i] * j][col + sign[i] * j].isEmpty():
+                                            if self.board[lin + sign[i] * j][col + sign[i] * j].piece.kind != PieceType.KING:
+                                                #delta_diag: int = abs((col + sign[i] * j) - ((col + sign[i] * j) + sign[i] * (col + sign[i] * 8)))
+                                                #fonctionne
+                                                
+                                                if 0 < lin + sign[i] * j < 7 and 0 < col + sign[i] * j < 7:
+                                                    for k in range(1, 8):
+                                                        if 0 <= ((lin + sign[i] * j) + (sign[i] * k)) <= 7 and 0 <= ((col + sign[i] * j) + (sign[i] * k)) <= 7:
+                                                            if not self.board[(lin + sign[i] * j) + (sign[i] * k)][(col + sign[i] * j) + (sign[i] * k)].isEmpty():
+                                                                logger.warning("coordonné board : %s", self.board[(lin + sign[i] * j) + (sign[i] * k)][(col + sign[i] * j) + (sign[i] * k)].piece.kind)
+                                                                if self.board[(lin + sign[i] * j) + (sign[i] * k)][(col + sign[i] * j) + (sign[i] * k)].piece.kind == PieceType.KING:
+                                                                    logger.warning("king")
+                                                                    self.list_piece_pin.append((lin + sign[i] * j, col + sign[i] * j))
+                                                                    self.pin_color.append(self.board[lin + sign[i] * j][col + sign[i] * j].piece.color)
+                                                                    logger.warning("list_piece_pin : %s", self.list_piece_pin)
+                                                                else:
+                                                                    break
                                 else:
-                                    self.white_check = True
-                                print("check black / white = ", self.black_check, self.white_check)
-                                return True
-                            else:
-                                print("pas d'échec")
-                                return False
-                        elif self.board[move.end[0]][move.end[1]].piece.kind == PieceType.KING:
-                            if self.move_pawn(Move(move.end, [lin, col]), True):
-                                if color_piece == Color.WHITE:
-                                    self.black_check = True
+                                    print("déplacement hors de l'échiquier")
+                        for i in range(2):
+                            for j in range(8):
+                                if 0 <= lin + list(reversed(sign))[i] * j <= 7 and 0 <= col + sign[i] * j <= 7:
+                                    if move_switcher.get(type_piece_start)(Move([lin, col], [lin + list(reversed(sign))[i] * j, col + sign[i] * j]), True):
+                                        model_board[lin + list(reversed(sign))[i] * j][col + sign[i] * j] = 1
+                                        # test si il y a une pièce qui empêche le check (stratégie pin)
+                                        #fonction
+                                        # modifié pas testé
+                                        if not self.board[lin + list(reversed(sign))[i] * j][col + sign[i] * j].isEmpty():
+                                            if self.board[lin + list(reversed(sign))[i] * j][col + sign[i] * j].piece.kind != PieceType.KING:
+                                                if 0 < lin + list(reversed(sign))[i] * j < 7 and 0 < col + sign[i] * j < 7:
+                                                    for k in range(1, 8):
+                                                        if 0 <= (lin + list(reversed(sign))[i] * j) + (list(reversed(sign))[i] * k) <= 7 and 0 <= ((col + sign[i] * j) + sign[i] * k) <= 7:
+                                                            if not self.board[(lin + list(reversed(sign))[i] * j) + (list(reversed(sign))[i] * k)][((col + sign[i] * j) + sign[i] * k)].isEmpty():
+                                                                logger.warning("coordonné board : %s", ([(lin + list(reversed(sign))[i] * j) + (list(reversed(sign))[i] * k)], [(col + sign[i] * j) + sign[i] * k]))
+                                                                if self.board[(lin + list(reversed(sign))[i] * j) + (list(reversed(sign))[i] * k)][((col + sign[i] * j) + sign[i] * k)].piece.kind == PieceType.KING:
+                                                                    logger.warning("king")
+                                                                    self.list_piece_pin.append((lin + list(reversed(sign))[i] * j, col + sign[i] * j))
+                                                                    self.pin_color.append(self.board[lin + list(reversed(sign))[i] * j][col + sign[i] * j].piece.color)
+                                                                    logger.warning("list_piece_pin : %s", self.list_piece_pin)
+                                                                else:
+                                                                    break
                                 else:
-                                    self.white_check = True
-                                print("check black / white = ", self.black_check, self.white_check)
-                                return True
+                                    print("déplacement hors de l'échiquier")
+
+                    # test move pawn
+                    elif self.board[lin][col].piece.kind == PieceType.PAWN:
+                        for i in range(2):
+                            if 0 <= lin + sign[i] <= 7 and 0 <= col + sign[i] <= 7:
+                                if self.move_pawn(Move([lin, col], [lin + sign[i], col + sign[i]]), True):
+                                    model_board[lin + sign[i]][col + sign[i]] = 1
                             else:
-                                print("pas d'échec")
-                                return False
-                        else:
-                            print("Pas d'échec")
-                            return False
+                                print("déplacement hors de l'échiquier")
+                        for i in range(2):
+                            if 0 <= lin + sign[i] <= 7 and 0 <= col + list(reversed(sign))[i] <= 7:
+                                if self.move_pawn(Move([lin, col], [lin + sign[i], col + list(reversed(sign))[i]]), True):
+                                    model_board[lin + sign[i]][col + list(reversed(sign))[i]] = 1
+                            else:
+                                print("déplacement hors de l'échiquier")
+
+                    # test move king
+                    elif self.board[lin][col].piece.kind == PieceType.KING:
+                        if self.board[lin][col].piece.color == Color.WHITE:
+                            pos_roi_blanc = (lin, col)
+                        elif self.board[lin][col].piece.color == Color.BLACK:
+                            pos_roi_noir = (lin, col)
+                        # déplacement en diagonales
+                        for i in range(2):
+                            if 0 <= lin + sign[i] <= 7 and 0 <= col + sign[i] <= 7:
+                                if self.move_king(Move((lin, col), (lin + sign[i], col + sign[i])), True):
+                                    model_board[lin + sign[i]][col + sign[i]] = 1
+                            else:
+                                print("déplacement hors de l'échiquier")
+                        for i in range(2):
+                            if 0 <= lin + sign[i] <= 7 and 0 <= col + list(reversed(sign))[i] <= 7:
+                                if self.move_king(Move([lin, col], [lin + sign[i], col + list(reversed(sign))[i]]), True):
+                                    model_board[lin + sign[i]][col + list(reversed(sign))[i]] = 1
+                            else:
+                                print("déplacement hors de l'échiquier")
+                        
+                        # déplacement en lignes
+                        for i in range(2):
+                            if 0 <= lin + sign[i] <= 7 and 0 <= col <= 7:
+                                if self.move_king(Move([lin, col], [lin + sign[i], col]), True):
+                                    model_board[lin + sign[i]][col] = 1
+                            else:
+                                print("déplacement hors de l'échiquier")
+
+                        for i in range(2):
+                            if 0 <= lin <= 7 and 0 <= col + sign[i] <= 7:
+                                if self.move_king(Move([lin, col], [lin, col + sign[i]]), True):
+                                    model_board[lin][col + sign[i]] = 1
+                            else:
+                                print("déplacement hors de l'échiquier")
+
+        ############################
+        ############test############
+        ############################
+        print(model_board[0])
+        print(model_board[1])
+        print(model_board[2])
+        print(model_board[3])
+        print(model_board[4])
+        print(model_board[5])
+        print(model_board[6])
+        print(model_board[7])
+        
+        print(self.to_unicode())
+
+        logger.warning("white_check : %s", self.white_check)
+        logger.warning("black_check : %s", self.black_check)
+        logger.warning("pos_piece_check : %s", self.pos_piece_check)
+        logger.warning("list_piece_pin : %s", self.list_piece_pin)
+        ############################
+        ############test############
+        ############################
+
+        if self.white_check:
+            return True
+        if self.black_check:
+            return True
+
+        return False
 
     def move_knight(self, move: Move, check: bool) -> bool:
         # postion de la pièce avant son déplacement dans l'échiquier
@@ -317,10 +551,10 @@ class Board:
                     return False
             # si elle est vide et l'emplacement finale
             if self.board[move.end[0]][move.end[1]].isEmpty():
-                return self.move_piece(move)
+                return self.move_piece(move, check)
             # si elle n'est pas vide et que c'est l'emplacement finale
             else:
-                return self.take_piece(move)
+                return self.take_piece(move, check)
         else:
             return False
 
@@ -348,10 +582,10 @@ class Board:
                         return False
                 # si elle est vide et l'emplacement finale
                 if self.board[move.end[0]][move.end[1]].isEmpty():
-                    return self.move_piece(move)
+                    return self.move_piece(move, check)
                 # si elle n'est pas vide et que c'est l'emplacement finale
                 else:
-                    return self.take_piece(move)
+                    return self.take_piece(move,check)
             # déplacement en colonne
             elif move.end[1] != move.start[1]:
                 for i in range(1, iteration_col):
@@ -360,10 +594,10 @@ class Board:
                         return False
                 # si elle est vide et l'emplacement finale
                 if self.board[move.end[0]][move.end[1]].isEmpty():
-                    return self.move_piece(move)
+                    return self.move_piece(move, check)
                 # si elle n'est pas vide et que c'est l'emplacement finale
                 else:
-                    return self.take_piece(move)
+                    return self.take_piece(move, check)
         else:
             print("Impossible de déplacer la tour à cet endroit")
             return False
@@ -393,10 +627,10 @@ class Board:
                         return False
                 # si elle est vide et l'emplacement finale
                 if self.board[move.end[0]][move.end[1]].isEmpty():
-                    return self.move_piece(move)
+                    return self.move_piece(move, check)
                 # si elle n'est pas vide et que c'est l'emplacement finale
                 else:
-                    return self.take_piece(move)
+                    return self.take_piece(move, check)
             # déplacement en colonne
             elif move.end[1] != move.start[1]:
                 for i in range(1, iteration_col):
@@ -405,10 +639,10 @@ class Board:
                         return False
                 # si elle est vide et l'emplacement finale
                 if self.board[move.end[0]][move.end[1]].isEmpty():
-                    return self.move_piece(move)
+                    return self.move_piece(move, check)
                 # si elle n'est pas vide et que c'est l'emplacement finale
                 else:
-                    return self.take_piece(move)
+                    return self.take_piece(move, check)
 
         #si le déplacement se fait en diagonale
         elif iteration_lin == iteration_col:
@@ -424,26 +658,95 @@ class Board:
                     return False
             # si elle est vide et l'emplacement finale
             if self.board[move.end[0]][move.end[1]].isEmpty():
-                return self.move_piece(move)
+                return self.move_piece(move, check)
             # si elle n'est pas vide et que c'est l'emplacement finale
             else:
-                return self.take_piece(move)
+                return self.take_piece(move, check)
         else:
             print("Impossible de déplacer la dame à cet endroit")
             return False
-        
+    
     def move_king(self, move: Move, check: bool) -> bool:
+        start_square = self.board[move.start[0]][move.start[1]]
+        end_square = self.board[move.end[0]][move.end[1]]
 
-        if (move.start[0] - 1 <= move.end[0] <= move.start[0] + 1) and (move.start[1] - 1 <= move.end[1] <= move.start[1] + 1):
-            # si la case est vide et c'est l'emplacement final
-            if self.board[move.end[0]][move.end[1]].isEmpty():
-                return self.move_piece(move)
-            # si elle n'est pas vide et que c'est l'emplacement final
+        # Check who can castle
+        # Castling is only possible if king has never moved.
+        moves = self.move_list
+        has_white_king_already_moved = any(
+            movehistory.piece.kind == PieceType.KING and movehistory.piece.color == Color.WHITE for movehistory in
+            moves)
+        has_black_king_already_moved = any(
+            movehistory.piece.kind == PieceType.KING and movehistory.piece.color == Color.BLACK for movehistory in
+            moves)
+
+        # Castling is only possible if rook has never moved.
+        has_white_king_rook_already_moved = any(
+            movehistory.piece.kind == PieceType.ROOK and movehistory.piece.color == Color.WHITE and movehistory.start ==
+            [7, 7] for movehistory in moves)
+        has_white_queen_rook_already_moved = any(
+            movehistory.piece.kind == PieceType.ROOK and movehistory.piece.color == Color.WHITE and movehistory.start ==
+            [7, 0] for movehistory in moves)
+        has_black_king_rook_already_moved = any(
+            movehistory.piece.kind == PieceType.ROOK and movehistory.piece.color == Color.BLACK and movehistory.start ==
+            [0, 7] for movehistory in moves)
+        has_black_queen_rook_already_moved = any(
+            movehistory.piece.kind == PieceType.ROOK and movehistory.piece.color == Color.BLACK and movehistory.start ==
+            [0, 0] for movehistory in moves)
+
+        # A king can only move one step forward, backwards, left or right
+        if (move.start[0] - 1 <= move.end[0] <= move.start[0] + 1) and (
+                move.start[1] - 1 <= move.end[1] <= move.start[1] + 1):
+            # If square is empty
+            if end_square.isEmpty():
+                return self.move_piece(move, check)
+            # If square is not empty
+            elif end_square.isEmpty() is False:
+                print("Cannot take piece of your own color.")
             else:
-                return self.take_piece(move)
+                return self.take_piece(move, check)
+
+        # Elif queen's side castling
+        elif move.start[0] == move.end[0] and move.start[1] - 2 == move.end[1]:
+            if move.piece.color == Color.BLACK and has_black_king_already_moved is False:
+                if has_black_queen_rook_already_moved is False and self.board[0][1].isEmpty() and self.board[0][
+                    2].isEmpty() and self.board[0][3].isEmpty():
+                    self.can_black_queen_side_castle = True
+                    return self.queen_castle(move)
+                else:
+                    return False
+            elif move.piece.color == Color.WHITE and has_white_king_already_moved is False:
+                if has_white_queen_rook_already_moved is False and self.board[7][1].isEmpty() and self.board[7][
+                    2].isEmpty() and self.board[7][3].isEmpty():
+                    self.can_white_queen_side_castle = True
+                    return self.queen_castle(move)
+                else:
+                    return False
+        # Elif king's side castling
+        elif move.start[0] == move.end[0] and move.start[1] + 2 == move.end[1]:
+
+            if move.piece.color == Color.BLACK and has_black_king_already_moved is False:
+                if has_black_king_rook_already_moved is False and self.board[0][5].isEmpty() and self.board[0][
+                    6].isEmpty():
+                    self.can_black_king_side_castle = True
+                    return self.king_castle(move)
+                else:
+                    return False
+            elif move.piece.color == Color.WHITE and has_white_king_already_moved is False:
+                if has_white_king_rook_already_moved is False and self.board[7][5].isEmpty() and self.board[7][
+                    6].isEmpty():
+                    self.can_white_king_side_castle = True
+                    return self.king_castle(move)
+                else:
+                    return False
         else:
-            print("Impossible de déplacer le roi à cet endroit")
+            self.can_white_queen_side_castle = False
+            self.can_white_king_side_castle = False
+            self.can_black_queen_side_castle = False
+            self.can_black_king_side_castle = False
+            print("Cannot move king at this place.")
             return False
+
 
 
     def move_pawn(self, move: Move, check: bool) -> bool:
@@ -455,52 +758,57 @@ class Board:
                 # Pawns can only move forward one square at a time
                 if move.end[0] == move.start[0] + 1:
                     if move.end[0] == 7:
-                        return self.promotion(move)
+                        return self.promotion(move, check)
                     else:
-                        return self.move_piece(move)
+                        return self.move_piece(move, check)
                 # except for their very first move where they can move forward two squares.
                 elif move.end[0] == move.start[0] + 2 and move.start[0] == 1:
                     self.setEnPassantTargetSquare(move.end[0] - 1, move.end[1])
-                    return self.move_piece(move)
+                    return self.move_piece(move, check)
             # Pawns can only capture one square diagonally in front of them
-            elif move.end[0] == move.start[0] + 1 and (move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1):
+            elif move.end[0] == move.start[0] + 1 and (
+                    move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1):
                 if end_square.isEmpty() is False:
                     if move.end[0] == 7 and end_square.piece.color != start_square.piece.color:
-                        return self.promotion(move)
+                        return self.promotion(move, check)
                     else:
-                        return self.take_piece(move)
+                        return self.take_piece(move, check)
                 else:
                     print("cannot move pawn here.")
                     return False
         elif start_square.piece.color == Color.WHITE:
+            print("pawn is white.")
             if move.end[1] == move.start[1] and end_square.isEmpty():
+                print("Pawn wants to move on same column and ensquare is empty.")
                 if move.end[0] == move.start[0] - 1:
                     if move.end[0] == 0:
-                        return self.promotion(move)
+                        return self.promotion(move, check)
                     else:
-                        return self.move_piece(move)
+                        return self.move_piece(move, check)
                 elif move.end[0] == move.start[0] - 2 and move.start[0] == 6:
                     self.setEnPassantTargetSquare(move.end[0] + 1, move.end[1])
-                    return self.move_piece(move)
-                elif move.end[0] == move.start[0] - 1 and (move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1):
-                    if end_square.isEmpty() is False:
-                        if move.end[0] == 0 and end_square.piece.color != start_square.piece.color:
-                            return self.promotion(move)
-                        else:
-                            return self.take_piece(move)
+                    return self.move_piece(move, check)
+            elif move.end[0] == move.start[0] - 1 and (
+                    move.end[1] == move.start[1] - 1 or move.end[1] == move.start[1] + 1):
+                if end_square.isEmpty() is False:
+                    if move.end[0] == 0 and end_square.piece.color != start_square.piece.color:
+                        return self.promotion(move, check)
                     else:
-                        print("cannot move pawn here.")
-                        return False
+                        return self.take_piece(move, check)
+                else:
+                    print("cannot move pawn here.")
+                    return False
         else:
             return False
 
-    def promotion(self, move: Move) -> bool:
+    def promotion(self, move: Move, check: bool) -> bool:
         if move.promotion_kind is None:
             return False
-        new_piece_color = self.board[move.start[0]][move.start[1]].piece.color
-        new_piece = Piece(move.promotion_kind, new_piece_color)
-        self.board[move.start[0]][move.start[1]].piece = None
-        self.board[move.end[0]][move.end[1]].piece = new_piece
+        if check is False:
+            new_piece_color = self.board[move.start[0]][move.start[1]].piece.color
+            new_piece = Piece(move.promotion_kind, new_piece_color)
+            self.board[move.start[0]][move.start[1]].piece = None
+            self.board[move.end[0]][move.end[1]].piece = new_piece
         return True
 
     def board_to_fen(self) -> str:
@@ -556,3 +864,148 @@ class Board:
         board_fen += fullmove
 
         return board_fen
+
+    def board_to_fen(self) -> str:
+        board_fen = ''
+        for line in range(8):
+            board_fen += '/'
+            empty_squares = 0
+            for col in range(8):
+                square = self.board[line][col]
+                if square.isEmpty():
+                    empty_squares += 1
+                    board_fen += ''
+                else:
+                    if empty_squares > 0:
+                        empty_number = str(empty_squares)
+                        board_fen += empty_number
+                    piece = str(square.piece.piece_to_str())
+                    board_fen += piece
+                    empty_squares = 0
+            if empty_squares > 0:
+                empty_number = str(empty_squares)
+                board_fen += empty_number
+        board_fen = board_fen[1:]
+        if self.to_move == Color.BLACK:
+            board_fen += " b "
+        else:
+            board_fen += " w "
+
+        if self.can_white_king_side_castle:
+            board_fen += "K"
+        if self.can_white_queen_side_castle:
+            board_fen += "Q"
+        if self.can_black_king_side_castle:
+            board_fen += "k"
+        if self.can_black_queen_side_castle:
+            board_fen += "q"
+
+        if self.en_passant_target_square is not None:
+            enpassant = self.en_passant_target_square
+            chessline = IndexToLine[enpassant[0]]
+            column = enpassant[1]
+            enpassant_column = column + 1
+            chesscolumn = IndexToColumn[enpassant_column]
+            enpassant_target = ' ' + chessline + chesscolumn + ' '
+            board_fen += enpassant_target
+        else:
+            board_fen += ' - '
+
+        halfmove = str(self.halfmove_clock)
+        board_fen += halfmove
+        board_fen += ' '
+        fullmove = str(self.fullmove_number)
+        board_fen += fullmove
+
+        return board_fen
+
+    def game_to_pgn_long(self) -> str:
+        moves = self.move_list
+        long_pgn = ''
+        i = 1
+        round = 1
+        for move in moves:
+            move_start = IndexToColumn[move.start[1]] + IndexToLine[move.start[0]]
+            move_end = IndexToColumn[move.end[1]] + IndexToLine[move.end[0]]
+            piece = move.piece
+            # Display piece moves per round
+            if i % 2 != 0 and i > 1:
+                round += 1
+                long_pgn += ' ' + str(round) + '. '
+            elif i == 1:
+                long_pgn += '1. '
+            else:
+                long_pgn += ' '
+            if piece.kind != PieceType.PAWN:
+                long_pgn += piece.piece_to_str()
+            # Display when a piece has been eaten
+            if move.eat:
+                long_pgn += IndexToColumn[move.start[1]] + 'x' + move_end
+            else:
+                long_pgn += move_start + move_end
+            # Display promotion piece when pawn reaches board's end
+            if move.promotion_kind is not None:
+                new_piece: Piece = Piece(move.promotion_kind, piece.color)
+                long_pgn += '=' + new_piece.piece_to_str()
+            if move.is_castled:
+                if move.castling == 'QUEEN_CASTLING':
+                    long_pgn += 'O-O-O'
+                else:
+                    long_pgn += 'O-O'
+            i += 1
+        return long_pgn
+    
+    def game_to_pgn(self) -> str:
+        moves = self.move_list
+        copied_board: Board = Board()
+        copied_board.init_board()
+        long_pgn = ''
+        i = 1
+        round = 1
+        for move in moves:
+            move_end = IndexToColumn[move.end[1]] + IndexToLine[move.end[0]]
+            piece = move.piece
+            # Display piece moves per round
+            if i % 2 != 0 and i > 1:
+                round += 1
+                long_pgn += ' ' + str(round) + '. '
+            elif i == 1:
+                long_pgn += '1. '
+            else:
+                long_pgn += ' '
+            if piece.kind != PieceType.PAWN:
+                long_pgn += piece.piece_to_str()
+
+            # Loop through board to get other piece of same color
+            for line in range(8):
+                for col in range(8):
+                    square = self.board[line][col]
+                    if square.isEmpty() is False:
+                        # If found same piece on board
+                        if square.piece.kind == move.piece.kind and square.piece.color == move.piece.color:
+                            # If this piece can go to same end square as its pair:
+                            if copied_board.is_move_valid(Move([line, col], [move.end[0], move.end[1]])):
+                                if line == move.end[0]:
+                                    long_pgn += IndexToColumn[move.start[1]]
+                                elif col == move.end[1]:
+                                    long_pgn += IndexToLine[move.start[0]]
+
+            # Display when a piece has been eaten
+            if move.eat:
+                long_pgn += 'x' + move_end
+            else:
+                long_pgn += move_end
+            # Display promotion piece when pawn reaches board's end
+            if move.promotion_kind is not None:
+                new_piece: Piece = Piece(move.promotion_kind, piece.color)
+                long_pgn += '=' + new_piece.piece_to_str()
+            if move.is_castled:
+                if move.castling == 'QUEEN_CASTLING':
+                    long_pgn += 'O-O-O'
+                else:
+                    long_pgn += 'O-O'
+            i += 1
+
+            copied_board.make_move(move)
+
+        return long_pgn
