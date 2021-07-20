@@ -40,3 +40,53 @@ def test_move_knight():
     board.make_move(Move((4, 7), (3, 5)))
     assert f5.piece.kind == PieceType.KNIGHT
     assert f5.piece.color == Color.WHITE
+
+def test_check():
+    board = Board()
+    # reset
+    board.fen_to_board = ("3k4/8/8/8/8/5N2/8/3K2r1 w - - 0 1")
+
+    # move's knight / king check by rook
+    assert board.king_check == True
+    assert board.white_check == True
+    assert board.make_move(Move((5, 5), (0, 6))) == True
+    assert board.white_check == False
+    print("should True")
+    print(board.to_unicode())
+
+    # reset
+    board.fen_to_board = ("3k4/8/8/8/8/5N2/8/3K2r1 w - - 0 1")
+
+    # move's knight / king check by rook
+    assert board.king_check == True
+    assert board.white_check == True
+    assert ((5, 5), (3, 4)) in board.pos_piece_pin == True
+    assert board.make_move(Move((5, 5), (3, 4))) == False
+    print("should False")
+    print(board.to_unicode())
+    
+    # move king to remove knight pin by rook
+    assert board.make_move(Move((7, 3), (6, 2))) == True
+    assert board.king_check == False
+    assert board.white_check == False
+    assert board.pos_piece_pin.length == 0
+    print(board.to_unicode())
+
+    # reset
+    board.fen_to_board = ("3k4/8/8/8/8/5N2/8/3K2r1 w - - 0 1")
+
+    # move's king check check by rook
+    assert board.make_move(Move((7, 3), (6, 3))) == True
+    print("should True")
+    print(board.to_unicode())
+
+    # reset
+    board.fen_to_board = ("3k4/8/8/8/8/5N2/8/3K2r1 w - - 0 1")
+
+    # move's king check check by rook
+    assert board.make_move(Move((7, 3), (7, 2))) == False
+    print("should False")
+    print(board.to_unicode())
+
+    
+
