@@ -44,6 +44,7 @@ print(board.make_move(Move((7, 4), (6, 3))))
 print(board.to_unicode())
 
 board.board[4][3].piece = str_to_piece['b']
+board.board[4][3].piece.color = Color.BLACK
 
 print(board.to_unicode())
 print(board.make_move(Move((4, 3), (5, 2))))

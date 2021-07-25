@@ -724,44 +724,45 @@ class Board:
             if end_square.isEmpty():
                 return self.move_piece(move, check)
             # If square is not empty
-            elif end_square.isEmpty() is False:
-                print("Cannot take piece of your own color.")
+            elif self.take_piece(move, check):
+                return True
             else:
-                return self.take_piece(move, check)
+                print("Cannot take piece of your own color.")
+                return False
 
         # Elif queen's side castling
-        elif move.start[0] == move.end[0] and move.start[1] - 2 == move.end[1]:
-            if move.piece.color == Color.BLACK and has_black_king_already_moved is False:
-                if has_black_queen_rook_already_moved is False and self.board[0][1].isEmpty() and self.board[0][
-                    2].isEmpty() and self.board[0][3].isEmpty():
-                    self.can_black_queen_side_castle = True
-                    return self.queen_castle(move)
-                else:
-                    return False
-            elif move.piece.color == Color.WHITE and has_white_king_already_moved is False:
-                if has_white_queen_rook_already_moved is False and self.board[7][1].isEmpty() and self.board[7][
-                    2].isEmpty() and self.board[7][3].isEmpty():
-                    self.can_white_queen_side_castle = True
-                    return self.queen_castle(move)
-                else:
-                    return False
-        # Elif king's side castling
-        elif move.start[0] == move.end[0] and move.start[1] + 2 == move.end[1]:
-
-            if move.piece.color == Color.BLACK and has_black_king_already_moved is False:
-                if has_black_king_rook_already_moved is False and self.board[0][5].isEmpty() and self.board[0][
-                    6].isEmpty():
-                    self.can_black_king_side_castle = True
-                    return self.king_castle(move)
-                else:
-                    return False
-            elif move.piece.color == Color.WHITE and has_white_king_already_moved is False:
-                if has_white_king_rook_already_moved is False and self.board[7][5].isEmpty() and self.board[7][
-                    6].isEmpty():
-                    self.can_white_king_side_castle = True
-                    return self.king_castle(move)
-                else:
-                    return False
+        #elif move.start[0] == move.end[0] and move.start[1] - 2 == move.end[1]:
+        #    if move.piece.color == Color.BLACK and has_black_king_already_moved is False:
+        #        if has_black_queen_rook_already_moved is False and self.board[0][1].isEmpty() and self.board[0][
+        #            2].isEmpty() and self.board[0][3].isEmpty():
+        #            self.can_black_queen_side_castle = True
+        #            return self.queen_castle(move)
+        #        else:
+        #            return False
+        #    elif move.piece.color == Color.WHITE and has_white_king_already_moved is False:
+        #        if has_white_queen_rook_already_moved is False and self.board[7][1].isEmpty() and self.board[7][
+        #            2].isEmpty() and self.board[7][3].isEmpty():
+        #            self.can_white_queen_side_castle = True
+        #            return self.queen_castle(move)
+        #        else:
+        #            return False
+        ## Elif king's side castling
+        #elif move.start[0] == move.end[0] and move.start[1] + 2 == move.end[1]:
+#
+        #    if move.piece.color == Color.BLACK and has_black_king_already_moved is False:
+        #        if has_black_king_rook_already_moved is False and self.board[0][5].isEmpty() and self.board[0][
+        #            6].isEmpty():
+        #            self.can_black_king_side_castle = True
+        #            return self.king_castle(move)
+        #        else:
+        #            return False
+        #    elif move.piece.color == Color.WHITE and has_white_king_already_moved is False:
+        #        if has_white_king_rook_already_moved is False and self.board[7][5].isEmpty() and self.board[7][
+        #            6].isEmpty():
+        #            self.can_white_king_side_castle = True
+        #            return self.king_castle(move)
+        #        else:
+        #            return False
         else:
             self.can_white_queen_side_castle = False
             self.can_white_king_side_castle = False
